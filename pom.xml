@@ -18,7 +18,24 @@
     <!-- If the JDK doesn't have the US-restricted JCE files, some of the tests may fail.
     Don't count those as fatal failures. -->
     <property.test.testFailureIgnore>true</property.test.testFailureIgnore>
+
+    <property.version.commons-codec>1.8</property.version.commons-codec>
+    <property.version.junit>4.11</property.version.junit>
   </properties>
+
+  <dependencies>
+      <dependency>
+          <groupId>commons-codec</groupId>
+          <artifactId>commons-codec</artifactId>
+          <version>${property.version.commons-codec}</version>
+      </dependency>
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${property.version.junit}</version>
+        <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
   </build>
