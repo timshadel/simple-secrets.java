@@ -9,7 +9,7 @@
   <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>Simple-Secrets</name>
-  <description>Java implementation of Simple-Secrets.</decsription>
+  <description>Java implementation of Simple-Secrets.</description>
   <url>https://github.com/timshadel/simple-secrets.java</url>
 
   <properties>
