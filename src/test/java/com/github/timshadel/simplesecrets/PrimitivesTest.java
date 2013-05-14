@@ -13,6 +13,14 @@ import static org.junit.Assert.*;
 public class PrimitivesTest
 {
   @Test
+  public void constructor()
+  {
+    Object object = new Primitives();
+    assertNotNull(object);
+  }
+
+
+  @Test
   public void test_nonce()
   {
     byte[] nonce = Primitives.nonce();
