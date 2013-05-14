@@ -1,22 +1,48 @@
 <project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId></groupId>
-    <artifactId>simple-secrets</artifactId>
-    <version>1.0.0</version>
-    <packaging>jar</packaging>
-    <name>Simple-Secrets</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.timshadel</groupId>
+  <artifactId>simple-secrets</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+  <name>Simple-Secrets</name>
+  <description>Java implementation of Simple-Secrets.</decsription>
+  <url>https://github.com/timshadel/simple-secrets.java</url>
 
-    <properties>
-        <!-- If the JDK doesn't have the US-restricted JCE files, some of the tests may fail.
-        Don't count those as fatal failures. -->
-        <property.test.testFailureIgnore>true</property.test.testFailureIgnore>
-    </properties>
+  <properties>
+    <!-- If the JDK doesn't have the US-restricted JCE files, some of the tests may fail.
+    Don't count those as fatal failures. -->
+    <property.test.testFailureIgnore>true</property.test.testFailureIgnore>
+  </properties>
 
-    <build>
-    </build>
+  <build>
+  </build>
+
+  <licenses>
+    <license>
+      <name>MIT license</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>jaywagnon</id>
+      <name>Jay Wagnon</name>
+      <email>jaywagnon@gmail.com</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/timshadel/simple-secrets.java.git</connection>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/timshadel/simple-secrets.java/issues</url>
+  </issueManagement>
 
 </project>
