@@ -30,6 +30,7 @@ public class PrimitivesTest
     assertFalse("Nonce is not repeated", Arrays.equals(nonce, another_nonce));
   }
 
+
   @Test( expected = IllegalArgumentException.class)
   public void test_derive_sender_hmac_null_master_key()
           throws GeneralSecurityException
@@ -61,6 +62,41 @@ public class PrimitivesTest
     byte[] result = Primitives.derive_sender_hmac(master_key);
     assertTrue("Derives sender HMAC key", Arrays.equals(expected, result));
   }
+
+
+
+  @Test( expected = IllegalArgumentException.class)
+  public void test_derive_sender_key_null_master_key()
+          throws GeneralSecurityException
+  {
+    Primitives.derive_sender_key(null);
+  }
+
+  @Test( expected = IllegalArgumentException.class)
+  public void test_derive_sender_key_too_short_master_key()
+          throws GeneralSecurityException
+  {
+    Primitives.derive_sender_key(hexStringToBytes("33", 31));
+  }
+
+  @Test( expected = IllegalArgumentException.class)
+  public void test_derive_sender_key_too_long_master_key()
+          throws GeneralSecurityException
+  {
+    Primitives.derive_sender_key(hexStringToBytes("33", 33));
+  }
+
+  @Test
+  public void test_derive_sender_key()
+          throws GeneralSecurityException
+  {
+    byte[] master_key = hexStringToBytes("bc", 32);
+    byte[] expected = hexStringToBytes("327b5f32d7ff0beeb0a7224166186e5f1fc2ba681092214a25b1465d1f17d837");
+
+    byte[] result = Primitives.derive_sender_key(master_key);
+    assertTrue("Derives sender key", Arrays.equals(expected, result));
+  }
+
 
 
   private static final byte[] hexStringToBytes(String string)
