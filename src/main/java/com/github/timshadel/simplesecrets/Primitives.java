@@ -51,6 +51,38 @@ public class Primitives
 
 
   /**
+   * Generate the authentication key for messages originating from the channel's Receiver side.
+   *
+   * Uses the ASCII string 'simple-crypto/receiver-hmac-key' as the role.
+   *
+   * @param master_key - the 256-bit master key of this secure channel
+   * @return
+   * @throws GeneralSecurityException
+   */
+  public static byte[] derive_receiver_hmac(final byte[] master_key)
+          throws GeneralSecurityException
+  {
+    return derive(master_key, "simple-crypto/receiver-hmac-key");
+  }
+
+
+  /**
+   * Generate the encryption key for messages originating from the channel's Receiver side.
+   *
+   * Uses the ASCII string 'simple-crypto/receiver-cipher-key' as the role.
+   *
+   * @param master_key - the 256-bit master key of this secure channel
+   * @return
+   * @throws GeneralSecurityException
+   */
+  public static byte[] derive_receiver_key(final byte[] master_key)
+          throws GeneralSecurityException
+  {
+    return derive(master_key, "simple-crypto/receiver-cipher-key");
+  }
+
+
+  /**
    * Generate an encryption or hmac key from the master key and role.
    *
    * Uses SHA256(key || role).
