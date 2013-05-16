@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.junit.Assert.*;
+
 
 @RunWith(PowerMockRunner.class)
 public class PacketTest
@@ -16,23 +18,24 @@ public class PacketTest
 
 
   @Test(expected = IllegalArgumentException.class)
-  public void test_constrcutor_null_key()
+  public void test_constructor_null_key()
   {
     new Packet(null);
   }
 
 
   @Test(expected = IllegalArgumentException.class)
-  public void test_constrcutor_bad_key()
+  public void test_constructor_bad_key()
   {
     new Packet("I'm not a hex string.");
   }
 
 
   @Test
-  public void test_constrcutor()
+  public void test_constructor()
   {
-    Object object = new Packet(MASTER_KEY);
+    Object packet = new Packet(MASTER_KEY);
+    assertNotNull(packet);
   }
 
 
@@ -48,7 +51,7 @@ public class PacketTest
   private static final byte[] hexStringToBytes(String string, int repeat)
   {
     try {
-      return new Hex().decode(hexString(string,repeat).getBytes());
+      return new Hex().decode(hexString(string, repeat).getBytes());
     }
     catch (DecoderException e) {
       e.printStackTrace();

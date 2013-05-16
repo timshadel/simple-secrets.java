@@ -355,7 +355,7 @@ public class PrimitivesTest
   public void test_joinByteArrays_null()
           throws Exception
   {
-    byte[] result = Whitebox.<byte[]>invokeMethod(Primitives.class, "joinByteArrays", (byte[]) null);
+    byte[] result = Whitebox.invokeMethod(Primitives.class, "joinByteArrays", (byte[]) null);
     assertNotNull(result);
     assertEquals(0, result.length);
   }
@@ -369,7 +369,7 @@ public class PrimitivesTest
     byte[] array2 = "456".getBytes();
     byte[] array3 = "789".getBytes();
     byte[] array4 = "0".getBytes();
-    byte[] result = Whitebox.<byte[]>invokeMethod(Primitives.class, "joinByteArrays", array1, array2, array3, array4);
+    byte[] result = Whitebox.invokeMethod(Primitives.class, "joinByteArrays", array1, array2, array3, array4);
     assertNotNull(result);
     assertEquals(10, result.length);
     assertTrue(Arrays.equals("1234567890".getBytes(), result));
