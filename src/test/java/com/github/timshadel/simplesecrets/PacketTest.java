@@ -22,6 +22,13 @@ public class PacketTest
   }
 
 
+  @Test(expected = IllegalArgumentException.class)
+  public void test_constrcutor_bad_key()
+  {
+    new Packet("I'm not a hex string.");
+  }
+
+
   @Test
   public void test_constrcutor()
   {
