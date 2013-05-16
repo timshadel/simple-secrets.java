@@ -111,27 +111,11 @@ public class Primitives
     SecretKeySpec keySpec = new SecretKeySpec(master_key, KEY_ALGORITHM);
     cipher.init(Cipher.ENCRYPT_MODE, keySpec);
 
-    ByteArrayOutputStream out = new ByteArrayOutputStream(48);
+    byte[] iv_bytes = cipher.getIV();
+    byte[] binary_bytes = cipher.update(binary);
+    byte[] final_bytes = cipher.doFinal();
 
-    byte[] encrypted = null;
-    try
-    {
-      out.write(cipher.getIV());
-      out.write(cipher.update(binary));
-      out.write(cipher.doFinal());
-
-      encrypted = out.toByteArray();
-      out.close();
-    }
-    catch(IOException e)
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      try{ out.close(); } catch(IOException e){ e.printStackTrace(); }
-    }
-
+    byte[] encrypted = joinByteArrays(iv_bytes, binary_bytes, final_bytes);
     return encrypted;
   }
 
@@ -159,26 +143,10 @@ public class Primitives
     IvParameterSpec ivSpec = new IvParameterSpec(iv, 0, cipher.getBlockSize());
     cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
 
-    ByteArrayOutputStream out = new ByteArrayOutputStream(48);
+    byte[] binary_bytes = cipher.update(binary);
+    byte[] final_bytes = cipher.doFinal();
 
-    byte[] decrypted = null;
-    try
-    {
-      out.write(cipher.update(binary));
-      out.write(cipher.doFinal());
-
-      decrypted = out.toByteArray();
-      out.close();
-    }
-    catch(IOException e)
-    {
-      e.printStackTrace();
-    }
-    finally
-    {
-      try{ out.close(); } catch(IOException e){ e.printStackTrace(); }
-    }
-
+    byte[] decrypted = joinByteArrays(binary_bytes, final_bytes);
     return decrypted;
   }
 
@@ -234,5 +202,28 @@ public class Primitives
   {
     if(binary == null || binary.length != bytes)
       throw new IllegalArgumentException((bytes * 8) + "-bit byte array required.");
+  }
+
+
+  private static byte[] joinByteArrays(final byte[]...binaries)
+  {
+    int size = 0;
+    if(binaries[0] == null)
+      return new byte[0];
+
+    for(byte[] binary : binaries)
+    {
+      size += binary.length;
+    }
+
+    int index = 0;
+    byte[] result = new byte[size];
+    for(byte[] binary : binaries)
+    {
+      System.arraycopy(binary, 0, result, index, binary.length);
+      index += binary.length;
+    }
+
+    return result;
   }
 }

@@ -326,6 +326,33 @@ public class PrimitivesTest
   }
 
 
+  @Test
+  public void test_joinByteArrays_null()
+          throws Exception
+  {
+    byte[] result = Whitebox.<byte[]> invokeMethod(Primitives.class, "joinByteArrays", (byte[])null);
+    assertNotNull(result);
+    assertEquals(0, result.length);
+  }
+
+  @Test
+  public void test_joinByteArrays()
+          throws Exception
+  {
+    byte[] array1 = "123".getBytes();
+    byte[] array2 = "456".getBytes();
+    byte[] array3 = "789".getBytes();
+    byte[] array4 = "0".getBytes();
+    byte[] result = Whitebox.<byte[]> invokeMethod(Primitives.class, "joinByteArrays", array1, array2, array3, array4);
+    assertNotNull(result);
+    assertEquals(10, result.length);
+    assertTrue(Arrays.equals("1234567890".getBytes(), result));
+  }
+
+
+
+
+  // Helper methods
 
   private static final byte[] hexStringToBytes(String string)
   {
