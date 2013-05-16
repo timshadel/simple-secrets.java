@@ -1,13 +1,13 @@
 package com.github.timshadel.simplesecrets;
 
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
+
 
 public class Primitives
 {
@@ -17,6 +17,7 @@ public class Primitives
 
   /**
    * Provide 16 securely random bytes.
+   *
    * @return
    */
   public static byte[] nonce()
@@ -29,7 +30,7 @@ public class Primitives
 
   /**
    * Generate the authentication key for messages originating from the channel's Sender side.
-   *
+   * <p/>
    * Uses the ASCII string 'simple-crypto/sender-hmac-key' as the role.
    *
    * @param master_key - the 256-bit master key of this secure channel
@@ -45,7 +46,7 @@ public class Primitives
 
   /**
    * Generate the encryption key for messages originating from the channel's Sender side.
-   *
+   * <p/>
    * Uses the ASCII string 'simple-crypto/sender-cipher-key' as the role.
    *
    * @param master_key - the 256-bit master key of this secure channel
@@ -61,7 +62,7 @@ public class Primitives
 
   /**
    * Generate the authentication key for messages originating from the channel's Receiver side.
-   *
+   * <p/>
    * Uses the ASCII string 'simple-crypto/receiver-hmac-key' as the role.
    *
    * @param master_key - the 256-bit master key of this secure channel
@@ -77,7 +78,7 @@ public class Primitives
 
   /**
    * Generate the encryption key for messages originating from the channel's Receiver side.
-   *
+   * <p/>
    * Uses the ASCII string 'simple-crypto/receiver-cipher-key' as the role.
    *
    * @param master_key - the 256-bit master key of this secure channel
@@ -93,10 +94,10 @@ public class Primitives
 
   /**
    * Encrypt buffer with the given key.
-   *
+   * <p/>
    * Uses AES256 with a random 128-bit initialization vector.
    *
-   * @param binary - the plaintext binary string
+   * @param binary     - the plaintext binary string
    * @param master_key - the 256-bit encryption key
    * @return - a binary string of (IV + ciphertext)
    * @throws GeneralSecurityException
@@ -122,12 +123,12 @@ public class Primitives
 
   /**
    * Decrypt buffer with the given key and initialization vector.
-   *
+   * <p/>
    * Uses AES256.
    *
-   * @param binary - ciphertext
+   * @param binary     - ciphertext
    * @param master_key - the 256-bit encryption key
-   * @param iv - the 128-bit initialization vector
+   * @param iv         - the 128-bit initialization vector
    * @return - plaintext binary string
    * @throws GeneralSecurityException
    */
@@ -153,14 +154,14 @@ public class Primitives
 
   /**
    * Generate an encryption or hmac key from the master key and role.
-   *
+   * <p/>
    * Uses SHA256(key || role).
    *
-   * @todo link or citation
    * @param master_key
    * @param role
    * @return
    * @throws GeneralSecurityException
+   * @todo link or citation
    */
   private static byte[] derive(final byte[] master_key, final String role)
           throws GeneralSecurityException
@@ -176,50 +177,48 @@ public class Primitives
 
   /**
    * Asserts that the given byte array is non-null.
-   *
+   * <p/>
    * Throws IllegalArgumentException if not.
    *
-   * @throws IllegalArgumentException
    * @param binary
+   * @throws IllegalArgumentException
    */
   private static void assertBinary(final byte[] binary)
   {
-    if(binary == null)
+    if (binary == null)
       throw new IllegalArgumentException("Byte array required.");
   }
 
 
   /**
    * Asserts that the given byte array is non-null and of the given size.
-   *
+   * <p/>
    * Throws IllegalArgumentException if not.
    *
-   * @throws IllegalArgumentException
    * @param binary
    * @param bytes
+   * @throws IllegalArgumentException
    */
   private static void assertBinarySize(final byte[] binary, int bytes)
   {
-    if(binary == null || binary.length != bytes)
+    if (binary == null || binary.length != bytes)
       throw new IllegalArgumentException((bytes * 8) + "-bit byte array required.");
   }
 
 
-  private static byte[] joinByteArrays(final byte[]...binaries)
+  private static byte[] joinByteArrays(final byte[]... binaries)
   {
     int size = 0;
-    if(binaries[0] == null)
+    if (binaries[0] == null)
       return new byte[0];
 
-    for(byte[] binary : binaries)
-    {
+    for (byte[] binary : binaries) {
       size += binary.length;
     }
 
     int index = 0;
     byte[] result = new byte[size];
-    for(byte[] binary : binaries)
-    {
+    for (byte[] binary : binaries) {
       System.arraycopy(binary, 0, result, index, binary.length);
       index += binary.length;
     }

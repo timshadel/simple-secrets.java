@@ -36,30 +36,33 @@ public class PrimitivesTest
   }
 
 
-  @Test( expected = IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_sender_hmac_null_master_key()
           throws GeneralSecurityException
   {
     Primitives.derive_sender_hmac(null);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_sender_hmac_master_key_too_short()
           throws GeneralSecurityException
   {
     Primitives.derive_sender_hmac(hexStringToBytes("bc", 31));
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_sender_hmac_master_key_too_long()
           throws GeneralSecurityException
   {
     Primitives.derive_sender_hmac(hexStringToBytes("bc", 33));
   }
 
+
   @Test
   public void test_derive_sender_hmac()
-    throws GeneralSecurityException
+          throws GeneralSecurityException
   {
     byte[] master_key = hexStringToBytes("bc", 32);
     byte[] expected = hexStringToBytes("1e2e2725f135463f05c268ffd1c1687dbc9dd7da65405697471052236b3b3088");
@@ -69,27 +72,29 @@ public class PrimitivesTest
   }
 
 
-
-  @Test( expected = IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_sender_key_null_master_key()
           throws GeneralSecurityException
   {
     Primitives.derive_sender_key(null);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_sender_key_master_key_too_short()
           throws GeneralSecurityException
   {
     Primitives.derive_sender_key(hexStringToBytes("33", 31));
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_sender_key_master_key_too_long()
           throws GeneralSecurityException
   {
     Primitives.derive_sender_key(hexStringToBytes("33", 33));
   }
+
 
   @Test
   public void test_derive_sender_key()
@@ -103,26 +108,29 @@ public class PrimitivesTest
   }
 
 
-  @Test( expected = IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_receiver_hmac_null_master_key()
           throws GeneralSecurityException
   {
     Primitives.derive_receiver_hmac(null);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_receiver_hmac_master_key_too_short()
           throws GeneralSecurityException
   {
     Primitives.derive_receiver_hmac(hexStringToBytes("bc", 31));
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_receiver_hmac_master_key_too_long()
           throws GeneralSecurityException
   {
     Primitives.derive_receiver_hmac(hexStringToBytes("bc", 33));
   }
+
 
   @Test
   public void test_derive_receiver_hmac()
@@ -136,27 +144,29 @@ public class PrimitivesTest
   }
 
 
-
-  @Test( expected = IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_receiver_key_null_master_key()
           throws GeneralSecurityException
   {
     Primitives.derive_receiver_key(null);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_receiver_key_master_key_too_short()
           throws GeneralSecurityException
   {
     Primitives.derive_receiver_key(hexStringToBytes("33", 31));
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_derive_receiver_key_master_key_too_long()
           throws GeneralSecurityException
   {
     Primitives.derive_receiver_key(hexStringToBytes("33", 33));
   }
+
 
   @Test
   public void test_derive_receiver_key()
@@ -174,33 +184,38 @@ public class PrimitivesTest
   private static final byte[] ENCRYPT_DECRYPT_KEY = hexStringToBytes("cd", 32);
   private static final byte[] ENCRYPT_DECRYPT_IV = hexStringToBytes("ab", 16);
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_encrypt_null_binary()
           throws GeneralSecurityException
   {
     Primitives.encrypt(null, ENCRYPT_DECRYPT_KEY);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_encrypt_null_key()
           throws GeneralSecurityException
   {
     Primitives.encrypt(hexStringToBytes("11", 25), null);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_encrypt_key_too_short()
           throws GeneralSecurityException
   {
     Primitives.encrypt(hexStringToBytes("11", 25), hexStringToBytes("cd", 31));
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_encrypt_key_too_long()
           throws GeneralSecurityException
   {
     Primitives.encrypt(hexStringToBytes("11", 25), hexStringToBytes("cd", 33));
   }
+
 
   @Test
   public void test_encrypt()
@@ -211,54 +226,61 @@ public class PrimitivesTest
   }
 
 
-  @Test( expected = IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void test_decrypt_null_binary()
           throws GeneralSecurityException
   {
     Primitives.decrypt(null, ENCRYPT_DECRYPT_KEY, ENCRYPT_DECRYPT_IV);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_decrypt_null_key()
           throws GeneralSecurityException
   {
     Primitives.decrypt(ENCRYPT_DECRYPT_DATA, null, ENCRYPT_DECRYPT_IV);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_decrypt_key_too_short()
           throws GeneralSecurityException
   {
     Primitives.decrypt(ENCRYPT_DECRYPT_DATA, hexStringToBytes("cd", 31), ENCRYPT_DECRYPT_IV);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_decrypt_key_too_long()
           throws GeneralSecurityException
   {
     Primitives.decrypt(ENCRYPT_DECRYPT_DATA, hexStringToBytes("cd", 33), ENCRYPT_DECRYPT_IV);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_decrypt_null_iv()
           throws GeneralSecurityException
   {
     Primitives.decrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY, null);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_decrypt_iv_too_short()
           throws GeneralSecurityException
   {
     Primitives.decrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY, hexStringToBytes("ab", 15));
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_decrypt_iv_too_long()
           throws GeneralSecurityException
   {
     Primitives.decrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY, hexStringToBytes("ab", 17));
   }
+
 
   @Test
   public void test_decrypt()
@@ -278,7 +300,7 @@ public class PrimitivesTest
   {
     byte[] encrypted = Primitives.encrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY);
 
-    byte[] iv = Arrays.copyOfRange(encrypted,0, 16);
+    byte[] iv = Arrays.copyOfRange(encrypted, 0, 16);
     byte[] ciphertext = Arrays.copyOfRange(encrypted, 16, encrypted.length);
     byte[] plaintext = Primitives.decrypt(ciphertext, ENCRYPT_DECRYPT_KEY, iv);
 
@@ -286,15 +308,16 @@ public class PrimitivesTest
   }
 
 
-
   // Private method tests
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_assertBinary_null()
           throws Exception
   {
-    Whitebox.invokeMethod(Primitives.class, "assertBinary", (byte[])null);
+    Whitebox.invokeMethod(Primitives.class, "assertBinary", (byte[]) null);
   }
+
 
   @Test
   public void test_assertBinary()
@@ -304,19 +327,21 @@ public class PrimitivesTest
   }
 
 
-  @Test( expected = IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void test_assertBinarySize_null_binary()
           throws Exception
   {
-    Whitebox.invokeMethod(Primitives.class, "assertBinarySize", (byte[])null, 1);
+    Whitebox.invokeMethod(Primitives.class, "assertBinarySize", (byte[]) null, 1);
   }
 
-  @Test( expected = IllegalArgumentException.class)
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_assertBinarySize_invalid_size()
           throws Exception
   {
     Whitebox.invokeMethod(Primitives.class, "assertBinarySize", new byte[16], 1);
   }
+
 
   @Test
   public void test_assertBinarySize()
@@ -330,10 +355,11 @@ public class PrimitivesTest
   public void test_joinByteArrays_null()
           throws Exception
   {
-    byte[] result = Whitebox.<byte[]> invokeMethod(Primitives.class, "joinByteArrays", (byte[])null);
+    byte[] result = Whitebox.<byte[]>invokeMethod(Primitives.class, "joinByteArrays", (byte[]) null);
     assertNotNull(result);
     assertEquals(0, result.length);
   }
+
 
   @Test
   public void test_joinByteArrays()
@@ -343,16 +369,15 @@ public class PrimitivesTest
     byte[] array2 = "456".getBytes();
     byte[] array3 = "789".getBytes();
     byte[] array4 = "0".getBytes();
-    byte[] result = Whitebox.<byte[]> invokeMethod(Primitives.class, "joinByteArrays", array1, array2, array3, array4);
+    byte[] result = Whitebox.<byte[]>invokeMethod(Primitives.class, "joinByteArrays", array1, array2, array3, array4);
     assertNotNull(result);
     assertEquals(10, result.length);
     assertTrue(Arrays.equals("1234567890".getBytes(), result));
   }
 
 
-
-
   // Helper methods
+
 
   private static final byte[] hexStringToBytes(String string)
   {
@@ -363,11 +388,12 @@ public class PrimitivesTest
   private static final byte[] hexStringToBytes(String string, int repeat)
   {
     StringBuilder builder = new StringBuilder();
-    for(int i = 0; i < repeat; i++)
+    for (int i = 0; i < repeat; i++)
       builder.append(string);
     try {
       return new Hex().decode(builder.toString().getBytes());
-    } catch (DecoderException e) {
+    }
+    catch (DecoderException e) {
       e.printStackTrace();
       return null;
     }
