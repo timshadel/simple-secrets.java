@@ -4,12 +4,17 @@ package com.github.timshadel.simplesecrets;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
+
+@RunWith(PowerMockRunner.class)
 public class PrimitivesTest
 {
   @Test
@@ -205,6 +210,15 @@ public class PrimitivesTest
     assertEquals(48, result.length);
   }
 
+  @Test
+  public void test_encrypt_bad_stream()
+          throws GeneralSecurityException
+  {
+
+    byte[] result = Primitives.encrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY);
+    assertEquals(null, result);
+  }
+
 
   @Test( expected = IllegalArgumentException.class)
   public void test_decrypt_null_binary()
@@ -278,6 +292,46 @@ public class PrimitivesTest
     byte[] plaintext = Primitives.decrypt(ciphertext, ENCRYPT_DECRYPT_KEY, iv);
 
     assertTrue("Encrypts and decrypts the data", Arrays.equals(ENCRYPT_DECRYPT_DATA, plaintext));
+  }
+
+
+
+  // Private method tests
+
+  @Test( expected = IllegalArgumentException.class)
+  public void test_assertBinary_null()
+          throws Exception
+  {
+    Whitebox.invokeMethod(Primitives.class, "assertBinary", (byte[])null);
+  }
+
+  @Test
+  public void test_assertBinary()
+          throws Exception
+  {
+    Whitebox.invokeMethod(Primitives.class, "assertBinary", new byte[16]);
+  }
+
+
+  @Test( expected = IllegalArgumentException.class)
+  public void test_assertBinarySize_null_binary()
+          throws Exception
+  {
+    Whitebox.invokeMethod(Primitives.class, "assertBinarySize", (byte[])null, 1);
+  }
+
+  @Test( expected = IllegalArgumentException.class)
+  public void test_assertBinarySize_invalid_size()
+          throws Exception
+  {
+    Whitebox.invokeMethod(Primitives.class, "assertBinarySize", new byte[16], 1);
+  }
+
+  @Test
+  public void test_assertBinarySize()
+          throws Exception
+  {
+    Whitebox.invokeMethod(Primitives.class, "assertBinarySize", new byte[16], 16);
   }
 
 

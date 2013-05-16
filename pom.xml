@@ -1,99 +1,121 @@
 <project
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.github.timshadel</groupId>
-  <artifactId>simple-secrets</artifactId>
-  <version>1.0.0</version>
-  <packaging>jar</packaging>
+    <groupId>com.github.timshadel</groupId>
+    <artifactId>simple-secrets</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
 
-  <name>Simple-Secrets</name>
-  <description>Java implementation of Simple-Secrets.</description>
-  <url>https://github.com/timshadel/simple-secrets.java</url>
+    <name>Simple-Secrets</name>
+    <description>Java implementation of Simple-Secrets.</description>
+    <url>https://github.com/timshadel/simple-secrets.java</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- If the JDK doesn't have the US-restricted JCE files, some of the tests may fail.
-    Don't count those as fatal failures. -->
-    <property.test.testFailureIgnore>true</property.test.testFailureIgnore>
+        <!-- If the JDK doesn't have the US-restricted JCE files, some of the tests may fail.
+        Don't count those as fatal failures. -->
+        <property.test.testFailureIgnore>true</property.test.testFailureIgnore>
 
-    <property.version.commons-codec>1.8</property.version.commons-codec>
-    <property.version.junit>4.11</property.version.junit>
-  </properties>
+        <property.version.commons-codec>1.8</property.version.commons-codec>
+        <property.version.junit>4.11</property.version.junit>
+        <property.version.mockito>1.9.5</property.version.mockito>
+        <property.version.powermock>1.5</property.version.powermock>
+    </properties>
 
-  <dependencies>
-      <dependency>
-          <groupId>commons-codec</groupId>
-          <artifactId>commons-codec</artifactId>
-          <version>${property.version.commons-codec}</version>
-      </dependency>
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${property.version.junit}</version>
-        <scope>test</scope>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${property.version.commons-codec}</version>
+        </dependency>
 
-  <build>
-      <plugins>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <version>3.1</version>
-              <configuration>
-                  <source>1.6</source>
-                  <target>1.6</target>
-              </configuration>
-          </plugin>
-          <plugin>
-              <groupId>org.jacoco</groupId>
-              <artifactId>jacoco-maven-plugin</artifactId>
-              <version>0.6.2.201302030002</version>
-              <executions>
-                  <execution>
-                      <goals>
-                          <goal>prepare-agent</goal>
-                      </goals>
-                  </execution>
-                  <execution>
-                      <id>report</id>
-                      <phase>prepare-package</phase>
-                      <goals>
-                          <goal>report</goal>
-                      </goals>
-                  </execution>
-              </executions>
-          </plugin>
-      </plugins>
-  </build>
+        <!-- Testing dependencies -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${property.version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${property.version.mockito}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>${property.version.powermock}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${property.version.powermock}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-  <licenses>
-    <license>
-      <name>MIT license</name>
-      <url>http://www.opensource.org/licenses/mit-license.php</url>
-    </license>
-  </licenses>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.6.2.201302030002</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
-  <developers>
-    <developer>
-      <id>jaywagnon</id>
-      <name>Jay Wagnon</name>
-      <email>jaywagnon@gmail.com</email>
-    </developer>
-  </developers>
+    <licenses>
+        <license>
+            <name>MIT license</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
 
-  <scm>
-    <connection>scm:git:https://github.com/timshadel/simple-secrets.java.git</connection>
-  </scm>
+    <developers>
+        <developer>
+            <id>jaywagnon</id>
+            <name>Jay Wagnon</name>
+            <email>jaywagnon@gmail.com</email>
+        </developer>
+    </developers>
 
-  <issueManagement>
-    <system>GitHub</system>
-    <url>https://github.com/timshadel/simple-secrets.java/issues</url>
-  </issueManagement>
+    <scm>
+        <connection>scm:git:https://github.com/timshadel/simple-secrets.java.git</connection>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/timshadel/simple-secrets.java/issues</url>
+    </issueManagement>
 
 </project>
