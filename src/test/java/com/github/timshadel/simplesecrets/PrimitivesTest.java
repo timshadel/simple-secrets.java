@@ -210,15 +210,6 @@ public class PrimitivesTest
     assertEquals(48, result.length);
   }
 
-  @Test
-  public void test_encrypt_bad_stream()
-          throws GeneralSecurityException
-  {
-
-    byte[] result = Primitives.encrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY);
-    assertEquals(null, result);
-  }
-
 
   @Test( expected = IllegalArgumentException.class)
   public void test_decrypt_null_binary()
