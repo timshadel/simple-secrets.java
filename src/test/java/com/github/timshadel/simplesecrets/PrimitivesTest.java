@@ -409,12 +409,30 @@ public class PrimitivesTest
     assertTrue(Arrays.equals(expected, Primitives.binify("abcd")));
   }
 
-
   @Test
   public void test_binify_needing_padding()
   {
     byte[] expected = Base64.decodeBase64("YWJjZGU=");
     assertTrue(Arrays.equals(expected, Primitives.binify("YWJjZGU")));
+  }
+
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_stringify_null_binary()
+  {
+    Primitives.stringify(null);
+  }
+
+  @Test
+  public void test_stringify()
+  {
+    assertEquals("MjIyMjIyMjIyMg",Primitives.stringify(hexStringToBytes("32",10)));
+  }
+
+  @Test
+  public void test_stringify_remove_padding()
+  {
+    assertEquals("YWJjZGU", Primitives.stringify(hexStringToBytes("6162636465")));
   }
 
 

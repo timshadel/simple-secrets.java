@@ -263,6 +263,14 @@ public class Primitives
 
 
 
+  public static String stringify(byte[] binary)
+  {
+    assertBinary(binary);
+
+    return Base64.encodeBase64URLSafeString(binary);
+  }
+
+
   /**
    * Generate an encryption or hmac key from the master key and role.
    * <p/>
