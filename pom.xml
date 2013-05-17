@@ -21,13 +21,20 @@
         Don't count those as fatal failures. -->
         <property.test.testFailureIgnore>true</property.test.testFailureIgnore>
 
+        <property.version.commons-lang3>3.1</property.version.commons-lang3>
         <property.version.commons-codec>1.8</property.version.commons-codec>
+
         <property.version.junit>4.11</property.version.junit>
         <property.version.mockito>1.9.5</property.version.mockito>
         <property.version.powermock>1.5</property.version.powermock>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${property.version.commons-lang3}</version>
+        </dependency>
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>

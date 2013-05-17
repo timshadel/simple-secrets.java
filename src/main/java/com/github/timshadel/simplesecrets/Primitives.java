@@ -1,6 +1,9 @@
 package com.github.timshadel.simplesecrets;
 
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
@@ -234,6 +237,28 @@ public class Primitives
     }
 
     return same == 0;
+  }
+
+
+  /**
+   * Turn a websafe string back into a binary string.
+   *
+   * Uses base64url encoding.
+   *
+   * @param base64 - websafe string
+   * @return - the binary version of this string
+   */
+  public static byte[] binify(String base64)
+  {
+    if(base64 == null || Base64.isBase64(base64) == false)
+      throw new IllegalArgumentException("Base64 string required.");
+
+    String _base64;
+    if(base64.length() % 4 != 0)
+      _base64 = StringUtils.rightPad(base64, base64.length() + (4 - (base64.length() % 4)), '=');
+    else
+      _base64 = base64;
+    return Base64.decodeBase64(_base64);
   }
 
 

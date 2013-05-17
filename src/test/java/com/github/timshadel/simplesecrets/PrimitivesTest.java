@@ -2,6 +2,7 @@ package com.github.timshadel.simplesecrets;
 
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -380,12 +381,41 @@ public class PrimitivesTest
     byte[] a = hexStringToBytes("11");
     byte[] b = hexStringToBytes("12");
     byte[] c = hexStringToBytes("11");
+    byte[] d = hexStringToBytes("1111");
 
     assertTrue(Primitives.compare(a, a));
     assertFalse(Primitives.compare(a, b));
     assertTrue(Primitives.compare(a, c));
+    assertFalse(Primitives.compare(a, d));
   }
 
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_binify_null_string()
+  {
+    Primitives.binify(null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_binify_invalid_string()
+  {
+    Primitives.binify("I'm not a base64 string.");
+  }
+
+  @Test
+  public void test_binify()
+  {
+    byte[] expected = hexStringToBytes("69b71d");
+    assertTrue(Arrays.equals(expected, Primitives.binify("abcd")));
+  }
+
+
+  @Test
+  public void test_binify_needing_padding()
+  {
+    byte[] expected = Base64.decodeBase64("YWJjZGU=");
+    assertTrue(Arrays.equals(expected, Primitives.binify("YWJjZGU")));
+  }
 
 
   // Private method tests
