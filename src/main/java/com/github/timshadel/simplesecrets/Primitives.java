@@ -183,7 +183,16 @@ public class Primitives
   }
 
 
-  public static byte[] hmac(final byte[] binary, final byte[] hmac_key)
+  /**
+   * Create a message authentication code for the given data.
+   # Uses HMAC-SHA256.
+
+   * @param binary - data to authenticate
+   * @param hmac_key - the authentication key
+   * @return - 32-byte MAC binary string
+   * @throws GeneralSecurityException
+   */
+  public static byte[] mac(final byte[] binary, final byte[] hmac_key)
           throws GeneralSecurityException
   {
     assertBinary(binary);
