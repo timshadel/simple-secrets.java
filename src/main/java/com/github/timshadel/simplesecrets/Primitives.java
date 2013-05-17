@@ -2,6 +2,7 @@ package com.github.timshadel.simplesecrets;
 
 
 import javax.crypto.Cipher;
+import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
@@ -17,6 +18,8 @@ public class Primitives
 {
   private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
   private static final String KEY_ALGORITHM = "AES";
+  private static final String DIGEST_ALGORITHM = "SHA-256";
+  private static final String HMAC_ALGORITHM = "HmacSHA256";
 
 
   /**
@@ -172,11 +175,25 @@ public class Primitives
     // expecting to use this with 32-byte master keys, so I did
     // not investigate further.
     // TODO: Figure out large-byte discrepency between Java and Ruby identify values.
-    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
     digest.update(BigInteger.valueOf(binary.length).toByteArray());
     digest.update(binary);
     byte[] hash = digest.digest();
     return Arrays.copyOfRange(hash, 0, 6);
+  }
+
+
+  public static byte[] hmac(final byte[] binary, final byte[] hmac_key)
+          throws GeneralSecurityException
+  {
+    assertBinary(binary);
+    assertBinarySize(hmac_key,32);
+
+    SecretKeySpec keySpec = new SecretKeySpec(hmac_key, HMAC_ALGORITHM);
+    Mac mac = Mac.getInstance(HMAC_ALGORITHM);
+    mac.init(keySpec);
+
+    return mac.doFinal(binary);
   }
 
 
