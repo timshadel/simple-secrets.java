@@ -207,6 +207,38 @@ public class Primitives
 
 
   /**
+   * Use a constant-time comparison algorithm to reduce
+   * side-channel attacks.
+   *
+   * Short-circuits only when the two buffers aren't the same length.
+   *
+   * @param a - a binary string
+   * @param b - a binary string
+   * @return true if both match
+   */
+  public static boolean compare(final byte[] a, final byte[] b)
+  {
+    assertBinary(a);
+    assertBinary(b);
+
+    // things must be the same length to compare them.
+    if(a.length != b.length)
+      return false;
+
+    // constant-time compare
+    //  hat-tip to https://github.com/freewil/scmp for |=
+    int same = 0;
+    for(int i = 0; i < a.length; i++)
+    {
+      same += a[i] ^ b[i];
+    }
+
+    return same == 0;
+  }
+
+
+
+  /**
    * Generate an encryption or hmac key from the master key and role.
    * <p/>
    * Uses SHA256(key || role).

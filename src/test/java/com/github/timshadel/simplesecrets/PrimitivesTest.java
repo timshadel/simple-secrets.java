@@ -329,28 +329,28 @@ public class PrimitivesTest
   public void test_mac_null_binary()
           throws GeneralSecurityException
   {
-    Primitives.hmac(null, KEY);
+    Primitives.mac(null, KEY);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void test_mac_null_hmac_key()
           throws GeneralSecurityException
   {
-    Primitives.hmac(DATA, null);
+    Primitives.mac(DATA, null);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void test_mac_hmac_key_too_short()
           throws GeneralSecurityException
   {
-    Primitives.hmac(DATA, hexStringToBytes("9f", 31));
+    Primitives.mac(DATA, hexStringToBytes("9f", 31));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void test_mac_hmac_key_too_long()
           throws GeneralSecurityException
   {
-    Primitives.hmac(DATA, hexStringToBytes("9f", 33));
+    Primitives.mac(DATA, hexStringToBytes("9f", 33));
   }
 
   @Test
@@ -358,8 +358,34 @@ public class PrimitivesTest
           throws GeneralSecurityException
   {
     byte[] expected = hexStringToBytes("adf1793fdef44c54a2c01513c0c7e4e71411600410edbde61558db12d0a01c65");
-    assertTrue(Arrays.equals(expected, Primitives.hmac(DATA, hexStringToBytes("9f", 32))));
+    assertTrue(Arrays.equals(expected, Primitives.mac(DATA, hexStringToBytes("9f", 32))));
   }
+
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_compare_null_a()
+  {
+    Primitives.compare(null, hexStringToBytes("11"));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_compare_null_b()
+  {
+    Primitives.compare(hexStringToBytes("11"), null);
+  }
+
+  @Test
+  public void test_compare()
+  {
+    byte[] a = hexStringToBytes("11");
+    byte[] b = hexStringToBytes("12");
+    byte[] c = hexStringToBytes("11");
+
+    assertTrue(Primitives.compare(a, a));
+    assertFalse(Primitives.compare(a, b));
+    assertTrue(Primitives.compare(a, c));
+  }
+
 
 
   // Private method tests
