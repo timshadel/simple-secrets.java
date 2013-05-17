@@ -5,7 +5,11 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -19,6 +23,7 @@ public class PacketTest
 
   @Test(expected = IllegalArgumentException.class)
   public void test_constructor_null_key()
+          throws GeneralSecurityException
   {
     new Packet(null);
   }
@@ -26,6 +31,7 @@ public class PacketTest
 
   @Test(expected = IllegalArgumentException.class)
   public void test_constructor_bad_key()
+          throws GeneralSecurityException
   {
     new Packet("I'm not a hex string.");
   }
@@ -33,9 +39,12 @@ public class PacketTest
 
   @Test
   public void test_constructor()
+          throws GeneralSecurityException
   {
     Object packet = new Packet(MASTER_KEY);
     assertNotNull(packet);
+    assertTrue(Arrays.equals(hexStringToBytes(MASTER_KEY), (byte[])Whitebox.getInternalState(packet, "master_key")));
+    assertTrue(Arrays.equals(hexStringToBytes("b097da5683f1"), (byte[]) Whitebox.getInternalState(packet, "identity")));
   }
 
 

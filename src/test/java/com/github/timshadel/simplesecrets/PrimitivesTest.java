@@ -17,6 +17,11 @@ import static org.junit.Assert.*;
 @RunWith(PowerMockRunner.class)
 public class PrimitivesTest
 {
+  private static final byte[] DATA = hexStringToBytes("11", 25);
+  private static final byte[] KEY = hexStringToBytes("cd", 32);
+  private static final byte[] IV = hexStringToBytes("ab", 16);
+
+
   @Test
   public void constructor()
   {
@@ -180,16 +185,11 @@ public class PrimitivesTest
   }
 
 
-  private static final byte[] ENCRYPT_DECRYPT_DATA = hexStringToBytes("11", 25);
-  private static final byte[] ENCRYPT_DECRYPT_KEY = hexStringToBytes("cd", 32);
-  private static final byte[] ENCRYPT_DECRYPT_IV = hexStringToBytes("ab", 16);
-
-
   @Test(expected = IllegalArgumentException.class)
   public void test_encrypt_null_binary()
           throws GeneralSecurityException
   {
-    Primitives.encrypt(null, ENCRYPT_DECRYPT_KEY);
+    Primitives.encrypt(null, KEY);
   }
 
 
@@ -221,7 +221,7 @@ public class PrimitivesTest
   public void test_encrypt()
           throws GeneralSecurityException
   {
-    byte[] result = Primitives.encrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY);
+    byte[] result = Primitives.encrypt(DATA, KEY);
     assertEquals(48, result.length);
   }
 
@@ -230,7 +230,7 @@ public class PrimitivesTest
   public void test_decrypt_null_binary()
           throws GeneralSecurityException
   {
-    Primitives.decrypt(null, ENCRYPT_DECRYPT_KEY, ENCRYPT_DECRYPT_IV);
+    Primitives.decrypt(null, KEY, IV);
   }
 
 
@@ -238,7 +238,7 @@ public class PrimitivesTest
   public void test_decrypt_null_key()
           throws GeneralSecurityException
   {
-    Primitives.decrypt(ENCRYPT_DECRYPT_DATA, null, ENCRYPT_DECRYPT_IV);
+    Primitives.decrypt(DATA, null, IV);
   }
 
 
@@ -246,7 +246,7 @@ public class PrimitivesTest
   public void test_decrypt_key_too_short()
           throws GeneralSecurityException
   {
-    Primitives.decrypt(ENCRYPT_DECRYPT_DATA, hexStringToBytes("cd", 31), ENCRYPT_DECRYPT_IV);
+    Primitives.decrypt(DATA, hexStringToBytes("cd", 31), IV);
   }
 
 
@@ -254,7 +254,7 @@ public class PrimitivesTest
   public void test_decrypt_key_too_long()
           throws GeneralSecurityException
   {
-    Primitives.decrypt(ENCRYPT_DECRYPT_DATA, hexStringToBytes("cd", 33), ENCRYPT_DECRYPT_IV);
+    Primitives.decrypt(DATA, hexStringToBytes("cd", 33), IV);
   }
 
 
@@ -262,7 +262,7 @@ public class PrimitivesTest
   public void test_decrypt_null_iv()
           throws GeneralSecurityException
   {
-    Primitives.decrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY, null);
+    Primitives.decrypt(DATA, KEY, null);
   }
 
 
@@ -270,7 +270,7 @@ public class PrimitivesTest
   public void test_decrypt_iv_too_short()
           throws GeneralSecurityException
   {
-    Primitives.decrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY, hexStringToBytes("ab", 15));
+    Primitives.decrypt(DATA, KEY, hexStringToBytes("ab", 15));
   }
 
 
@@ -278,7 +278,7 @@ public class PrimitivesTest
   public void test_decrypt_iv_too_long()
           throws GeneralSecurityException
   {
-    Primitives.decrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY, hexStringToBytes("ab", 17));
+    Primitives.decrypt(DATA, KEY, hexStringToBytes("ab", 17));
   }
 
 
@@ -289,8 +289,8 @@ public class PrimitivesTest
     byte[] ciphertext = hexStringToBytes("f8c6db482b00b25b122e2dc8c50c52db8dbd58a796fcaed6d926e87bb227dfbb");
     byte[] iv = hexStringToBytes("3f05e3a3fb9cdb198f498174002965ac");
 
-    byte[] plaintext = Primitives.decrypt(ciphertext, ENCRYPT_DECRYPT_KEY, iv);
-    assertTrue("Decrypts the data", Arrays.equals(ENCRYPT_DECRYPT_DATA, plaintext));
+    byte[] plaintext = Primitives.decrypt(ciphertext, KEY, iv);
+    assertTrue("Decrypts the data", Arrays.equals(DATA, plaintext));
   }
 
 
@@ -298,13 +298,30 @@ public class PrimitivesTest
   public void test_encrypt_and_decrypt()
           throws GeneralSecurityException
   {
-    byte[] encrypted = Primitives.encrypt(ENCRYPT_DECRYPT_DATA, ENCRYPT_DECRYPT_KEY);
+    byte[] encrypted = Primitives.encrypt(DATA, KEY);
 
     byte[] iv = Arrays.copyOfRange(encrypted, 0, 16);
     byte[] ciphertext = Arrays.copyOfRange(encrypted, 16, encrypted.length);
-    byte[] plaintext = Primitives.decrypt(ciphertext, ENCRYPT_DECRYPT_KEY, iv);
+    byte[] plaintext = Primitives.decrypt(ciphertext, KEY, iv);
 
-    assertTrue("Encrypts and decrypts the data", Arrays.equals(ENCRYPT_DECRYPT_DATA, plaintext));
+    assertTrue("Encrypts and decrypts the data", Arrays.equals(DATA, plaintext));
+  }
+
+
+  @Test(expected = IllegalArgumentException.class)
+  public void test_identify_null_binary()
+          throws GeneralSecurityException
+  {
+    Primitives.identify(null);
+  }
+
+
+  @Test
+  public void test_identify()
+          throws GeneralSecurityException
+  {
+    byte[] identity = Primitives.identify(KEY);
+    assertTrue(Arrays.equals(hexStringToBytes("b097da5683f1"),identity));
   }
 
 

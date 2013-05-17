@@ -4,9 +4,13 @@ package com.github.timshadel.simplesecrets;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 
 
 public class Primitives
@@ -149,6 +153,30 @@ public class Primitives
 
     byte[] decrypted = joinByteArrays(binary_bytes, final_bytes);
     return decrypted;
+  }
+
+
+  /**
+   * Create a short identifier for potentially sensitive data.
+   *
+   * @param binary - the data to identify
+   * @return - 6-byte binary string identifier
+   */
+  public static byte[] identify(final byte[] binary)
+          throws GeneralSecurityException
+  {
+    assertBinary(binary);
+
+    // This works for binaries of length 256-bytes or less.  Beyond that,
+    // the values don't match those from the Ruby side.  We're only
+    // expecting to use this with 32-byte master keys, so I did
+    // not investigate further.
+    // TODO: Figure out large-byte discrepency between Java and Ruby identify values.
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    digest.update(BigInteger.valueOf(binary.length).toByteArray());
+    digest.update(binary);
+    byte[] hash = digest.digest();
+    return Arrays.copyOfRange(hash, 0, 6);
   }
 
 
