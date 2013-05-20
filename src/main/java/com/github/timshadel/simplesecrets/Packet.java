@@ -90,4 +90,45 @@ public class Packet
     Primitives.zero(key, iv, encrypted);
     return body;
   }
+
+
+  public static byte[] authenticate(final byte[] data, final byte[] master_key, final byte[] identity)
+          throws GeneralSecurityException
+  {
+    byte[] hmac_key = Primitives.derive_sender_hmac(master_key);
+
+    byte[] auth = Utilities.joinByteArrays(identity, data);
+    byte[] mac = Primitives.mac(auth, hmac_key);
+    byte[] packet = Utilities.joinByteArrays(auth, mac);
+
+    Primitives.zero(hmac_key, mac);
+    return packet;
+  }
+
+
+  public static byte[] verify(final byte[] packet, final byte[] master_key, final byte[] identity)
+          throws GeneralSecurityException
+  {
+    // Must at least have an identity
+    if(packet.length < 6)
+      throw new GeneralSecurityException("Missing packet identity.");
+
+    byte[] packet_id = Arrays.copyOfRange(packet, 0, 6);
+    if(Primitives.compare(packet_id, identity) == false)
+      throw new GeneralSecurityException("Invalid packet identity.");
+
+    if(packet.length < 6 + 32)
+      throw new GeneralSecurityException("Missing packet MAC.");
+
+    byte[] data = Arrays.copyOfRange(packet, 0, packet.length - 32);
+    byte[] packet_mac = Arrays.copyOfRange(packet, packet.length -32, packet.length);
+
+    byte[] hmac_key = Primitives.derive_sender_hmac(master_key);
+    byte[] mac = Primitives.mac(data, hmac_key);
+    if(Primitives.compare(packet_mac, mac) == false)
+      throw new GeneralSecurityException("Invalid packet MAC.");
+
+    Primitives.zero(hmac_key, mac);
+    return Arrays.copyOfRange(packet, 6, packet.length - 32);
+  }
 }

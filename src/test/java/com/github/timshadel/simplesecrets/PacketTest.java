@@ -107,6 +107,68 @@ public class PacketTest
   }
 
 
+  @Test(expected = GeneralSecurityException.class)
+  public void test_authenticate_and_verify_invalid_identity()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] key = hexStringToBytes(MASTER_KEY);
+    byte[] identity = Primitives.identify(key);
+
+    Packet.verify(new byte[5], key, identity);
+  }
+
+  @Test(expected = GeneralSecurityException.class)
+  public void test_authenticate_and_verify_bad_identity()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] key = hexStringToBytes(MASTER_KEY);
+    byte[] identity = Primitives.identify(key);
+    byte[] bad_identity = hexStringToBytes("fd", 6);
+    byte[] body = Packet.build_body("abcd");
+
+    byte[] packet = Packet.authenticate(body, key, bad_identity);
+
+    Packet.verify(packet, key, identity);
+  }
+
+  @Test(expected = GeneralSecurityException.class)
+  public void test_authenticate_and_verify_invalid_mac()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] key = hexStringToBytes(MASTER_KEY);
+    byte[] identity = Primitives.identify(key);
+    byte[] body = Utilities.joinByteArrays(identity, new byte[31]);
+
+    Packet.verify(body, key, identity);
+  }
+
+  @Test(expected = GeneralSecurityException.class)
+  public void test_authenticate_and_verify_bad_mac()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] key = hexStringToBytes(MASTER_KEY);
+    byte[] identity = Primitives.identify(key);
+    byte[] body = Packet.build_body("abcd");
+
+    byte[] packet = Packet.authenticate(body, key, identity);
+    Arrays.fill(packet, packet.length - 32, packet.length, (byte)0xFD);  // Bad MAC
+
+    Packet.verify(packet, key, identity);
+  }
+
+  @Test
+  public void test_authenticate_and_verify()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] key = hexStringToBytes(MASTER_KEY);
+    byte[] identity = Primitives.identify(key);
+    byte[] body = Packet.build_body("abcd");
+
+    byte[] packet = Packet.authenticate(body, key, identity);
+    byte[] data = Packet.verify(packet, key, identity);
+    assertTrue(Arrays.equals(body, data));
+  }
+
 
   // Helper methods
 
