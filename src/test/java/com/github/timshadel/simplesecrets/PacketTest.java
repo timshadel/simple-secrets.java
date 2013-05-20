@@ -53,7 +53,7 @@ public class PacketTest
   public void test_build_body()
           throws GeneralSecurityException, IOException
   {
-    byte[] body = new Packet(MASTER_KEY).build_body("abcd");
+    byte[] body = Packet.build_body("abcd");
 
     // First 16 bytes will be unpredictable nonce.
     // Remaining bytes will be a serialization of the object.
@@ -69,7 +69,7 @@ public class PacketTest
           throws GeneralSecurityException, IOException
   {
     byte[] body = new byte[15];
-    new Packet(MASTER_KEY).body_to_data(body, String.class);
+    Packet.body_to_data(body, String.class);
   }
 
   @Test
@@ -81,8 +81,31 @@ public class PacketTest
 
     byte[] body = Utilities.joinByteArrays(nonce, data);
 
-    assertEquals("abcd", new Packet(MASTER_KEY).body_to_data(body, String.class));
+    assertEquals("abcd", Packet.body_to_data(body, String.class));
   }
+
+
+  @Test
+  public void test_encrypt_body_and_decrypt_body()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] body = Packet.build_body("abcd");
+
+    byte[] encrypted = Packet.encrypt_body(body, hexStringToBytes(MASTER_KEY));
+    byte[] decrypted = Packet.decrypt_body(encrypted, hexStringToBytes(MASTER_KEY));
+
+    assertFalse(Arrays.equals(encrypted, decrypted));
+    assertTrue(Arrays.equals(body, decrypted));
+  }
+
+  @Test(expected = GeneralSecurityException.class)
+  public void test_decrypt_body_too_short()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] body = new byte[15];
+    Packet.decrypt_body(body, hexStringToBytes(MASTER_KEY));
+  }
+
 
 
   // Helper methods

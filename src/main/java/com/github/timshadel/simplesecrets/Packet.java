@@ -32,7 +32,7 @@ public class Packet
   }
 
 
-  public byte[] build_body(Object data)
+  public static byte[] build_body(Object data)
           throws IOException
   {
     byte[] nonce = Primitives.nonce();
@@ -45,7 +45,7 @@ public class Packet
   }
 
 
-  public <T> T body_to_data(final byte[] body, final Class<T> klass)
+  public static <T> T body_to_data(final byte[] body, final Class<T> klass)
           throws GeneralSecurityException, IOException
   {
     // Must at least have a nonce
@@ -59,5 +59,35 @@ public class Packet
 
     Primitives.zero(nonce, payload);
     return data;
+  }
+
+
+  public static byte[] encrypt_body(final byte[] body, final byte[] master_key)
+          throws GeneralSecurityException
+  {
+    byte[] key = Primitives.derive_sender_key(master_key);
+
+    byte[] cipher_data = Primitives.encrypt(body, key);
+
+    Primitives.zero(key);
+    return cipher_data;
+  }
+
+
+  public static byte[] decrypt_body(final byte[] cipher_data, final byte[] master_key)
+          throws GeneralSecurityException
+  {
+    // Must at least have an iv
+    if(cipher_data.length < 16)
+      throw new GeneralSecurityException("Invalid encrypted payload.");
+
+    byte[] key = Primitives.derive_sender_key(master_key);
+    byte[] iv = Arrays.copyOfRange(cipher_data, 0, 16);
+    byte[] encrypted = Arrays.copyOfRange(cipher_data, 16, cipher_data.length);
+
+    byte[] body = Primitives.decrypt(encrypted, key, iv);
+
+    Primitives.zero(key, iv, encrypted);
+    return body;
   }
 }
