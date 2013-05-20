@@ -442,7 +442,8 @@ public class PrimitivesTest
           throws IOException
   {
     byte[] binary = Primitives.serialize("abcd");
-    assertEquals(5, binary.length);
+    byte[] expected = new byte[]{ -92, 97, 98, 99, 100 };
+    assertTrue(Arrays.equals(expected, binary));
   }
 
 
