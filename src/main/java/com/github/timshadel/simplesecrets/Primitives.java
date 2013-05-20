@@ -321,6 +321,29 @@ public class Primitives
 
 
   /**
+   * Overwrite the contents of the byte array with zeroes.
+   * This is critical for removing sensitive data from memory.
+   *
+   * @param binaries - byte arrays whose content should be wiped
+   */
+  public static void zero(byte[]... binaries)
+  {
+    if (binaries == null)
+      return;
+
+    for (byte[] binary : binaries) {
+      if(binary == null)
+        continue;
+
+      for(int i = 0; i < binary.length; i++)
+      {
+        binary[i] = 0x00;
+      }
+    }
+  }
+
+
+  /**
    * Generate an encryption or hmac key from the master key and role.
    * <p/>
    * Uses SHA256(key || role).

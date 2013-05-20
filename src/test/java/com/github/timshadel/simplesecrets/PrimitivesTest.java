@@ -472,6 +472,29 @@ public class PrimitivesTest
   }
 
 
+  @Test
+  public void test_zero_null_binaries()
+  {
+    Primitives.zero(null);
+  }
+
+  @Test
+  public void test_zero()
+  {
+    byte[] array1 = "123".getBytes();
+    byte[] array2 = "456".getBytes();
+    byte[] array3 = null;
+    byte[] array4 = "789".getBytes();
+
+    byte[] expected = new byte[]{ 0x00, 0x00, 0x00 };
+    Primitives.zero(array1, array2, array3, array4);
+    assertTrue(Arrays.equals(expected, array1));
+    assertTrue(Arrays.equals(expected, array2));
+    assertNull(array3);
+    assertTrue(Arrays.equals(expected, array4));
+  }
+
+
   // Private method tests
 
 
