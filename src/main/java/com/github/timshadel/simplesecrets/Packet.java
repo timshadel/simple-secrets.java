@@ -32,6 +32,49 @@ public class Packet
   }
 
 
+  public String pack(Object data)
+          throws GeneralSecurityException, IOException
+  {
+    byte[] body = null;
+    byte[] encrypted = null;
+    byte[] packet = null;
+    try
+    {
+      body = build_body(data);
+      encrypted = encrypt_body(body, master_key);
+      packet = authenticate(encrypted, master_key, identity);
+
+      return Primitives.stringify(packet);
+    }
+    finally
+    {
+      Primitives.zero(body, encrypted, packet);
+    }
+  }
+
+
+  public <T> T unpack(String packed_data, Class<T> klass)
+          throws GeneralSecurityException, IOException
+  {
+    byte[] packet = null;
+    byte[] cipher_data = null;
+    byte[] body = null;
+    try
+    {
+      packet = Primitives.binify(packed_data);
+      cipher_data = verify(packet, master_key, identity);
+
+      body = decrypt_body(cipher_data, master_key);
+
+      return body_to_data(body, klass);
+    }
+    finally
+    {
+      Primitives.zero(packet, body, cipher_data);
+    }
+  }
+
+
   public static byte[] build_body(Object data)
           throws IOException
   {

@@ -170,6 +170,31 @@ public class PacketTest
   }
 
 
+  @Test
+  public void test_pack_and_unpack()
+          throws GeneralSecurityException, IOException
+  {
+    String data = "This is a secret message!";
+
+    String packed_data = new Packet(MASTER_KEY).pack(data);
+
+    String decrypted = new Packet(MASTER_KEY).unpack(packed_data, String.class);
+    assertEquals(data, decrypted);
+  }
+
+  @Test(expected = GeneralSecurityException.class)
+  public void test_pack_and_unpack_with_different_key()
+          throws GeneralSecurityException, IOException
+  {
+    String data = "This is a secret message!";
+
+    String packed_data = new Packet(MASTER_KEY).pack(data);
+
+    new Packet(hexString("fd", 32)).unpack(packed_data, String.class);
+  }
+
+
+
   // Helper methods
 
 
