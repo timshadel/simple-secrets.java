@@ -446,7 +446,32 @@ public class PrimitivesTest
   }
 
 
-  
+  @Test( expected = IllegalArgumentException.class)
+  public void test_deserialize_null_binary()
+          throws IOException
+  {
+    Primitives.deserialize(null, String.class);
+  }
+
+  @Test( expected = IllegalArgumentException.class)
+  public void test_deserialize_null_class()
+          throws IOException
+  {
+    byte[] binary = new byte[]{ -92, 97, 98, 99, 100 };
+    Primitives.deserialize(binary, null);
+  }
+
+  @Test
+  public void test_deserialize()
+          throws IOException
+  {
+    byte[] binary = new byte[]{ -92, 97, 98, 99, 100 };
+    Object object = Primitives.deserialize(binary, String.class);
+    assertTrue(object instanceof String);
+    assertEquals("abcd", object);
+  }
+
+
   // Private method tests
 
 

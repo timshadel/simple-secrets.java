@@ -295,6 +295,30 @@ public class Primitives
   }
 
 
+  /**
+   * Turn a binary representation into a Ruby object suitable for use in application logic.
+   * This object possibly originated in a different programming environment—it should be
+   * JSON-like in structure.
+   *
+   * Uses MsgPack data serialization.
+   *
+   *
+   * @param binary - a binary string version of the object
+   * @param klass - the class of the object to be returned
+   * @param <T>
+   * @return - an object of the given class type
+   * @throws IOException
+   */
+  public static <T> T deserialize(byte[] binary, Class<T> klass)
+          throws IOException
+  {
+    assertBinary(binary);
+    if(klass == null)
+      throw new IllegalArgumentException("Class type required for deserialization.");
+
+    return new MessagePack().read(binary, klass);
+  }
+
 
   /**
    * Generate an encryption or hmac key from the master key and role.
@@ -350,6 +374,12 @@ public class Primitives
   }
 
 
+  /**
+   * Takes a series of byte arrays and joins them into a single array.
+   * 
+   * @param binaries
+   * @return
+   */
   private static byte[] joinByteArrays(final byte[]... binaries)
   {
     int size = 0;
