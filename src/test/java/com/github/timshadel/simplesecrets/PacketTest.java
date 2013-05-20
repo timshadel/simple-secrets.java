@@ -50,7 +50,7 @@ public class PacketTest
 
 
   @Test
-  public void build_body()
+  public void test_build_body()
           throws GeneralSecurityException, IOException
   {
     byte[] body = new Packet(MASTER_KEY).build_body("abcd");
@@ -61,6 +61,27 @@ public class PacketTest
 
     byte[] expected = new byte[]{ -92, 97, 98, 99, 100 };
     assertTrue(Arrays.equals(expected, Arrays.copyOfRange(body, 16, body.length)));
+  }
+
+
+  @Test(expected = GeneralSecurityException.class)
+  public void test_body_to_data_too_short()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] body = new byte[15];
+    new Packet(MASTER_KEY).body_to_data(body, String.class);
+  }
+
+  @Test
+  public void test_body_to_data()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] nonce = Primitives.nonce();
+    byte[] data = new byte[]{ -92, 97, 98, 99, 100 };
+
+    byte[] body = Utilities.joinByteArrays(nonce, data);
+
+    assertEquals("abcd", new Packet(MASTER_KEY).body_to_data(body, String.class));
   }
 
 

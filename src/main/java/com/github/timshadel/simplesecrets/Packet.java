@@ -6,6 +6,7 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 
 
 public class Packet
@@ -41,5 +42,22 @@ public class Packet
 
     Primitives.zero(nonce, binary);
     return body;
+  }
+
+
+  public <T> T body_to_data(final byte[] body, final Class<T> klass)
+          throws GeneralSecurityException, IOException
+  {
+    // Must at least have a nonce
+    if(body.length < 16)
+      throw new GeneralSecurityException("Invalid serialized payload.");
+
+    byte[] nonce = Arrays.copyOfRange(body, 0, 16);
+    byte[] payload = Arrays.copyOfRange(body, 16, body.length);
+
+    T data = Primitives.deserialize(payload, klass);
+
+    Primitives.zero(nonce, payload);
+    return data;
   }
 }
