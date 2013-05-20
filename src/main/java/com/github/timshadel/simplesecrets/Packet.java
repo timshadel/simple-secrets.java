@@ -21,10 +21,12 @@ public class Packet
     if (master_key == null)
       throw new IllegalArgumentException("Master key is required.");
 
-    try {
+    try
+    {
       this.master_key = Hex.decodeHex(master_key.toCharArray());
     }
-    catch (DecoderException e) {
+    catch (DecoderException e)
+    {
       throw new IllegalArgumentException("Invalid hexidecimal key.", e);
     }
 
@@ -78,13 +80,19 @@ public class Packet
   public static byte[] build_body(Object data)
           throws IOException
   {
-    byte[] nonce = Primitives.nonce();
-    byte[] binary = Primitives.serialize(data);
+    byte[] nonce = null;
+    byte[] binary = null;
+    try
+    {
+      nonce = Primitives.nonce();
+      binary = Primitives.serialize(data);
 
-    byte[] body = Utilities.joinByteArrays(nonce, binary);
-
-    Primitives.zero(nonce, binary);
-    return body;
+      return Utilities.joinByteArrays(nonce, binary);
+    }
+    finally
+    {
+      Primitives.zero(nonce, binary);
+    }
   }
 
 
@@ -95,25 +103,36 @@ public class Packet
     if(body.length < 16)
       throw new GeneralSecurityException("Invalid serialized payload.");
 
-    byte[] nonce = Arrays.copyOfRange(body, 0, 16);
-    byte[] payload = Arrays.copyOfRange(body, 16, body.length);
+    byte[] nonce = null;
+    byte[] payload = null;
+    try
+    {
+      nonce = Arrays.copyOfRange(body, 0, 16);
+      payload = Arrays.copyOfRange(body, 16, body.length);
 
-    T data = Primitives.deserialize(payload, klass);
-
-    Primitives.zero(nonce, payload);
-    return data;
+      return Primitives.deserialize(payload, klass);
+    }
+    finally
+    {
+      Primitives.zero(nonce, payload);
+    }
   }
 
 
   public static byte[] encrypt_body(final byte[] body, final byte[] master_key)
           throws GeneralSecurityException
   {
-    byte[] key = Primitives.derive_sender_key(master_key);
+    byte[] key = null;
+    try
+    {
+      key = Primitives.derive_sender_key(master_key);
 
-    byte[] cipher_data = Primitives.encrypt(body, key);
-
-    Primitives.zero(key);
-    return cipher_data;
+      return Primitives.encrypt(body, key);
+    }
+    finally
+    {
+      Primitives.zero(key);
+    }
   }
 
 
@@ -124,28 +143,41 @@ public class Packet
     if(cipher_data.length < 16)
       throw new GeneralSecurityException("Invalid encrypted payload.");
 
-    byte[] key = Primitives.derive_sender_key(master_key);
-    byte[] iv = Arrays.copyOfRange(cipher_data, 0, 16);
-    byte[] encrypted = Arrays.copyOfRange(cipher_data, 16, cipher_data.length);
+    byte[] iv = null;
+    byte[] encrypted = null;
+    byte[] key = null;
+    try
+    {
+      iv = Arrays.copyOfRange(cipher_data, 0, 16);
+      encrypted = Arrays.copyOfRange(cipher_data, 16, cipher_data.length);
+      key = Primitives.derive_sender_key(master_key);
 
-    byte[] body = Primitives.decrypt(encrypted, key, iv);
-
-    Primitives.zero(key, iv, encrypted);
-    return body;
+      return Primitives.decrypt(encrypted, key, iv);
+    }
+    finally
+    {
+      Primitives.zero(key, iv, encrypted);
+    }
   }
 
 
   public static byte[] authenticate(final byte[] data, final byte[] master_key, final byte[] identity)
           throws GeneralSecurityException
   {
-    byte[] hmac_key = Primitives.derive_sender_hmac(master_key);
+    byte[] hmac_key = null;
+    byte[] mac = null;
+    try
+    {
+      hmac_key = Primitives.derive_sender_hmac(master_key);
 
-    byte[] auth = Utilities.joinByteArrays(identity, data);
-    byte[] mac = Primitives.mac(auth, hmac_key);
-    byte[] packet = Utilities.joinByteArrays(auth, mac);
-
-    Primitives.zero(hmac_key, mac);
-    return packet;
+      byte[] auth = Utilities.joinByteArrays(identity, data);
+      mac = Primitives.mac(auth, hmac_key);
+      return Utilities.joinByteArrays(auth, mac);
+    }
+    finally
+    {
+      Primitives.zero(hmac_key, mac);
+    }
   }
 
 
