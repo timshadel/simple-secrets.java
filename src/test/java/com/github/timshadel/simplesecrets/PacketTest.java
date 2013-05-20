@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
@@ -45,6 +46,21 @@ public class PacketTest
     assertNotNull(packet);
     assertTrue(Arrays.equals(hexStringToBytes(MASTER_KEY), (byte[])Whitebox.getInternalState(packet, "master_key")));
     assertTrue(Arrays.equals(hexStringToBytes("b097da5683f1"), (byte[]) Whitebox.getInternalState(packet, "identity")));
+  }
+
+
+  @Test
+  public void build_body()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] body = new Packet(MASTER_KEY).build_body("abcd");
+
+    // First 16 bytes will be unpredictable nonce.
+    // Remaining bytes will be a serialization of the object.
+    assertEquals(21, body.length);
+
+    byte[] expected = new byte[]{ -92, 97, 98, 99, 100 };
+    assertTrue(Arrays.equals(expected, Arrays.copyOfRange(body, 16, body.length)));
   }
 
 

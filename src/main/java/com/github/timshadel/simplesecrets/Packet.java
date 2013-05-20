@@ -4,6 +4,7 @@ package com.github.timshadel.simplesecrets;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 
@@ -27,5 +28,18 @@ public class Packet
     }
 
     identity = Primitives.identify(this.master_key);
+  }
+
+
+  public byte[] build_body(Object data)
+          throws IOException
+  {
+    byte[] nonce = Primitives.nonce();
+    byte[] binary = Primitives.serialize(data);
+
+    byte[] body = Utilities.joinByteArrays(nonce, binary);
+
+    Primitives.zero(nonce, binary);
+    return body;
   }
 }
