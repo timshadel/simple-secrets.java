@@ -7,7 +7,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -493,74 +492,6 @@ public class PrimitivesTest
     assertTrue(Arrays.equals(expected, array2));
     assertNull(array3);
     assertTrue(Arrays.equals(expected, array4));
-  }
-
-
-  // Private method tests
-
-
-  @Test(expected = IllegalArgumentException.class)
-  public void test_assertBinary_null()
-          throws Exception
-  {
-    Whitebox.invokeMethod(Primitives.class, "assertBinary", (byte[]) null);
-  }
-
-
-  @Test
-  public void test_assertBinary()
-          throws Exception
-  {
-    Whitebox.invokeMethod(Primitives.class, "assertBinary", new byte[16]);
-  }
-
-
-  @Test(expected = IllegalArgumentException.class)
-  public void test_assertBinarySize_null_binary()
-          throws Exception
-  {
-    Whitebox.invokeMethod(Primitives.class, "assertBinarySize", (byte[]) null, 1);
-  }
-
-
-  @Test(expected = IllegalArgumentException.class)
-  public void test_assertBinarySize_invalid_size()
-          throws Exception
-  {
-    Whitebox.invokeMethod(Primitives.class, "assertBinarySize", new byte[16], 1);
-  }
-
-
-  @Test
-  public void test_assertBinarySize()
-          throws Exception
-  {
-    Whitebox.invokeMethod(Primitives.class, "assertBinarySize", new byte[16], 16);
-  }
-
-
-  @Test
-  public void test_joinByteArrays_null()
-          throws Exception
-  {
-    byte[] result = Whitebox.invokeMethod(Primitives.class, "joinByteArrays", (byte[]) null);
-    assertNotNull(result);
-    assertEquals(0, result.length);
-  }
-
-
-  @Test
-  public void test_joinByteArrays()
-          throws Exception
-  {
-    byte[] array1 = "123".getBytes();
-    byte[] array2 = "456".getBytes();
-    byte[] array3 = "789".getBytes();
-    byte[] array4 = "0".getBytes();
-    byte[] result = Whitebox.invokeMethod(Primitives.class, "joinByteArrays", array1, array2, array3, array4);
-    assertNotNull(result);
-    assertEquals(10, result.length);
-    assertTrue(Arrays.equals("1234567890".getBytes(), result));
   }
 
 

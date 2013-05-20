@@ -115,8 +115,8 @@ public class Primitives
   public static byte[] encrypt(final byte[] binary, final byte[] master_key)
           throws GeneralSecurityException
   {
-    assertBinary(binary);
-    assertBinarySize(master_key, 32);
+    Utilities.assertBinary(binary);
+    Utilities.assertBinarySize(master_key, 32);
 
     Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
     SecretKeySpec keySpec = new SecretKeySpec(master_key, KEY_ALGORITHM);
@@ -126,7 +126,7 @@ public class Primitives
     byte[] binary_bytes = cipher.update(binary);
     byte[] final_bytes = cipher.doFinal();
 
-    byte[] encrypted = joinByteArrays(iv_bytes, binary_bytes, final_bytes);
+    byte[] encrypted = Utilities.joinByteArrays(iv_bytes, binary_bytes, final_bytes);
     return encrypted;
   }
 
@@ -145,9 +145,9 @@ public class Primitives
   public static byte[] decrypt(final byte[] binary, final byte[] master_key, final byte[] iv)
           throws GeneralSecurityException
   {
-    assertBinary(binary);
-    assertBinarySize(master_key, 32);
-    assertBinarySize(iv, 16);
+    Utilities.assertBinary(binary);
+    Utilities.assertBinarySize(master_key, 32);
+    Utilities.assertBinarySize(iv, 16);
 
     Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
     SecretKeySpec keySpec = new SecretKeySpec(master_key, KEY_ALGORITHM);
@@ -157,7 +157,7 @@ public class Primitives
     byte[] binary_bytes = cipher.update(binary);
     byte[] final_bytes = cipher.doFinal();
 
-    byte[] decrypted = joinByteArrays(binary_bytes, final_bytes);
+    byte[] decrypted = Utilities.joinByteArrays(binary_bytes, final_bytes);
     return decrypted;
   }
 
@@ -171,13 +171,13 @@ public class Primitives
   public static byte[] identify(final byte[] binary)
           throws GeneralSecurityException
   {
-    assertBinary(binary);
+    Utilities.assertBinary(binary);
 
     // This works for binaries of length 256-bytes or less.  Beyond that,
     // the values don't match those from the Ruby side.  We're only
     // expecting to use this with 32-byte master keys, so I did
     // not investigate further.
-    // TODO: Figure out large-byte discrepency between Java and Ruby identify values.
+    // TODO: Figure out large-byte discrepancy between Java and Ruby identify values.
     MessageDigest digest = MessageDigest.getInstance(DIGEST_ALGORITHM);
     digest.update(BigInteger.valueOf(binary.length).toByteArray());
     digest.update(binary);
@@ -198,8 +198,8 @@ public class Primitives
   public static byte[] mac(final byte[] binary, final byte[] hmac_key)
           throws GeneralSecurityException
   {
-    assertBinary(binary);
-    assertBinarySize(hmac_key,32);
+    Utilities.assertBinary(binary);
+    Utilities.assertBinarySize(hmac_key,32);
 
     SecretKeySpec keySpec = new SecretKeySpec(hmac_key, HMAC_ALGORITHM);
     Mac mac = Mac.getInstance(HMAC_ALGORITHM);
@@ -221,8 +221,8 @@ public class Primitives
    */
   public static boolean compare(final byte[] a, final byte[] b)
   {
-    assertBinary(a);
-    assertBinary(b);
+    Utilities.assertBinary(a);
+    Utilities.assertBinary(b);
 
     // things must be the same length to compare them.
     if(a.length != b.length)
@@ -272,7 +272,7 @@ public class Primitives
    */
   public static String stringify(final byte[] binary)
   {
-    assertBinary(binary);
+    Utilities.assertBinary(binary);
 
     return Base64.encodeBase64URLSafeString(binary);
   }
@@ -312,7 +312,7 @@ public class Primitives
   public static <T> T deserialize(final byte[] binary, final Class<T> klass)
           throws IOException
   {
-    assertBinary(binary);
+    Utilities.assertBinary(binary);
     if(klass == null)
       throw new IllegalArgumentException("Class type required for deserialization.");
 
@@ -357,7 +357,7 @@ public class Primitives
   private static byte[] derive(final byte[] master_key, final String role)
           throws GeneralSecurityException
   {
-    assertBinarySize(master_key, 32);
+    Utilities.assertBinarySize(master_key, 32);
 
     MessageDigest digest = MessageDigest.getInstance("SHA-256");
     digest.update(master_key);
@@ -366,60 +366,4 @@ public class Primitives
   }
 
 
-  /**
-   * Asserts that the given byte array is non-null.
-   * <p/>
-   * Throws IllegalArgumentException if not.
-   *
-   * @param binary
-   * @throws IllegalArgumentException
-   */
-  private static void assertBinary(final byte[] binary)
-  {
-    if (binary == null)
-      throw new IllegalArgumentException("Byte array required.");
-  }
-
-
-  /**
-   * Asserts that the given byte array is non-null and of the given size.
-   * <p/>
-   * Throws IllegalArgumentException if not.
-   *
-   * @param binary
-   * @param bytes
-   * @throws IllegalArgumentException
-   */
-  private static void assertBinarySize(final byte[] binary, int bytes)
-  {
-    if (binary == null || binary.length != bytes)
-      throw new IllegalArgumentException((bytes * 8) + "-bit byte array required.");
-  }
-
-
-  /**
-   * Takes a series of byte arrays and joins them into a single array.
-   *
-   * @param binaries
-   * @return
-   */
-  private static byte[] joinByteArrays(final byte[]... binaries)
-  {
-    int size = 0;
-    if (binaries[0] == null)
-      return new byte[0];
-
-    for (byte[] binary : binaries) {
-      size += binary.length;
-    }
-
-    int index = 0;
-    byte[] result = new byte[size];
-    for (byte[] binary : binaries) {
-      System.arraycopy(binary, 0, result, index, binary.length);
-      index += binary.length;
-    }
-
-    return result;
-  }
 }
