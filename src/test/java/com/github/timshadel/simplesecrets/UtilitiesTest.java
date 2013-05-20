@@ -6,20 +6,19 @@ import org.powermock.reflect.Whitebox;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
-/**
- * Created with IntelliJ IDEA.
- * User: jay.wagnon
- * Date: 5/20/13
- * Time: 10:44 AM
- * To change this template use File | Settings | File Templates.
- */
 public class UtilitiesTest
 {
+  @Test
+  public void constructor()
+  {
+    Object object = new Utilities();
+    assertNotNull(object);
+  }
+
+
   @Test(expected = IllegalArgumentException.class)
   public void test_assertBinary_null()
           throws Exception
