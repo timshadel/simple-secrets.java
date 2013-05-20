@@ -5,7 +5,11 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
@@ -16,6 +20,8 @@ import static org.junit.Assert.*;
 
 
 @RunWith(PowerMockRunner.class)
+@PrepareForTest(Primitives.class)
+@PowerMockIgnore({ "javax.crypto.*" })  // Avoids ClassCastExceptions
 public class PacketTest
 {
   private static final String MASTER_KEY = hexString("cd", 32);
@@ -63,6 +69,15 @@ public class PacketTest
     assertTrue(Arrays.equals(expected, Arrays.copyOfRange(body, 16, body.length)));
   }
 
+  @Test(expected = IOException.class)
+  public void test_build_body_finally_block()
+          throws GeneralSecurityException, IOException
+  {
+    PowerMockito.mockStatic(Primitives.class);
+    Mockito.when(Primitives.serialize(Mockito.any(byte[].class))).thenThrow(new IOException());
+    Packet.build_body(null);
+  }
+
 
   @Test(expected = GeneralSecurityException.class)
   public void test_body_to_data_too_short()
@@ -82,6 +97,20 @@ public class PacketTest
     byte[] body = Utilities.joinByteArrays(nonce, data);
 
     assertEquals("abcd", Packet.body_to_data(body, String.class));
+  }
+
+  @Test(expected = IOException.class)
+  public void test_body_to_data_finally_block()
+          throws GeneralSecurityException, IOException
+  {
+    PowerMockito.mockStatic(Primitives.class);
+    Mockito.when(Primitives.deserialize(Mockito.any(byte[].class), Mockito.any(Class.class))).thenThrow(new IOException());
+
+    byte[] nonce = new byte[16];
+    byte[] data = new byte[]{ -92, 97, 98, 99, 100 };
+
+    byte[] body = Utilities.joinByteArrays(nonce, data);
+    Packet.body_to_data(body, String.class);
   }
 
 
@@ -104,6 +133,13 @@ public class PacketTest
   {
     byte[] body = new byte[15];
     Packet.decrypt_body(body, hexStringToBytes(MASTER_KEY));
+  }
+
+  @Test(expected = GeneralSecurityException.class)
+  public void test_decrypt_finally_block()
+          throws GeneralSecurityException, IOException
+  {
+    Packet.decrypt_body(new byte[48], hexStringToBytes(MASTER_KEY));
   }
 
 
@@ -169,6 +205,19 @@ public class PacketTest
     assertTrue(Arrays.equals(body, data));
   }
 
+  @Test(expected = GeneralSecurityException.class)
+  public void test_authenticate_finally_block()
+          throws GeneralSecurityException, IOException
+  {
+    PowerMockito.mockStatic(Primitives.class);
+    Mockito.when(Primitives.mac(Mockito.any(byte[].class), Mockito.any(byte[].class))).thenThrow(new GeneralSecurityException());
+
+    byte[] key = hexStringToBytes(MASTER_KEY);
+    byte[] identity = Primitives.identify(key);
+    byte[] body = Packet.build_body("abcd");
+    Packet.authenticate(body, key, identity);
+  }
+
 
   @Test
   public void test_pack_and_unpack()
@@ -192,7 +241,6 @@ public class PacketTest
 
     new Packet(hexString("fd", 32)).unpack(packed_data, String.class);
   }
-
 
 
   // Helper methods
