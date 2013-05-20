@@ -136,6 +136,16 @@ public class PacketTest
   }
 
   @Test(expected = GeneralSecurityException.class)
+  public void test_encrypt_finally_block()
+          throws GeneralSecurityException
+  {
+    PowerMockito.mockStatic(Primitives.class);
+    Mockito.when(Primitives.encrypt(Mockito.any(byte[].class), Mockito.any(byte[].class))).thenThrow(new GeneralSecurityException());
+
+    Packet.encrypt_body(new byte[48], hexStringToBytes(MASTER_KEY));
+  }
+
+  @Test(expected = GeneralSecurityException.class)
   public void test_decrypt_finally_block()
           throws GeneralSecurityException, IOException
   {
@@ -240,6 +250,15 @@ public class PacketTest
     String packed_data = new Packet(MASTER_KEY).pack(data);
 
     new Packet(hexString("fd", 32)).unpack(packed_data, String.class);
+  }
+
+  @Test(expected = IOException.class)
+  public void test_pack_finally_block()
+          throws GeneralSecurityException, IOException
+  {
+    PowerMockito.spy(Primitives.class);
+    Mockito.when(Primitives.serialize(Mockito.any())).thenThrow(new IOException());
+    new Packet(MASTER_KEY).pack("abcd");
   }
 
 

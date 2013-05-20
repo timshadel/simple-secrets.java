@@ -89,6 +89,16 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.6.2.201302030002</version>
+                <configuration>
+                    <check>
+                        <classRatio>100</classRatio>
+                        <instructionRatio>100</instructionRatio>
+                        <methodRatio>100</methodRatio>
+                        <branchRatio>100</branchRatio>
+                        <complexityRatio>100</complexityRatio>
+                        <lineRatio>100</lineRatio>
+                    </check>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -100,6 +110,7 @@
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>report</goal>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
