@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
+import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
@@ -436,6 +437,16 @@ public class PrimitivesTest
   }
 
 
+  @Test
+  public void test_serialize()
+          throws IOException
+  {
+    byte[] binary = Primitives.serialize("abcd");
+    assertEquals(5, binary.length);
+  }
+
+
+  
   // Private method tests
 
 

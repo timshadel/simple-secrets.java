@@ -3,16 +3,16 @@ package com.github.timshadel.simplesecrets;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.msgpack.MessagePack;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -262,13 +262,38 @@ public class Primitives
   }
 
 
-
+  /**
+   * Turn a binary buffer into a websafe string.
+   *
+   * Uses base64url encoding.
+   *
+   * @param binary - data which needs to be websafe
+   * @return - the websafe string
+   */
   public static String stringify(byte[] binary)
   {
     assertBinary(binary);
 
     return Base64.encodeBase64URLSafeString(binary);
   }
+
+
+  /**
+   * Turn a JSON-like object into a binary representation suitable for use in crypto functions.
+   * This object will possibly be deserialized in a different programming environment—it should
+   * be JSON-like in structure.
+   *
+   * Uses MsgPack data serialization.
+   *
+   * @param object - object to serialize
+   * @return - the binary version of this object
+   */
+  public static byte[] serialize(Object object)
+          throws IOException
+  {
+    return new MessagePack().write(object);
+  }
+
 
 
   /**
