@@ -248,7 +248,7 @@ public class Primitives
    * @param base64 - websafe string
    * @return - the binary version of this string
    */
-  public static byte[] binify(String base64)
+  public static byte[] binify(final String base64)
   {
     if(base64 == null || Base64.isBase64(base64) == false)
       throw new IllegalArgumentException("Base64 string required.");
@@ -270,7 +270,7 @@ public class Primitives
    * @param binary - data which needs to be websafe
    * @return - the websafe string
    */
-  public static String stringify(byte[] binary)
+  public static String stringify(final byte[] binary)
   {
     assertBinary(binary);
 
@@ -288,7 +288,7 @@ public class Primitives
    * @param object - object to serialize
    * @return - the binary version of this object
    */
-  public static byte[] serialize(Object object)
+  public static byte[] serialize(final Object object)
           throws IOException
   {
     return new MessagePack().write(object);
@@ -309,7 +309,7 @@ public class Primitives
    * @return - an object of the given class type
    * @throws IOException
    */
-  public static <T> T deserialize(byte[] binary, Class<T> klass)
+  public static <T> T deserialize(final byte[] binary, final Class<T> klass)
           throws IOException
   {
     assertBinary(binary);
@@ -376,7 +376,7 @@ public class Primitives
 
   /**
    * Takes a series of byte arrays and joins them into a single array.
-   * 
+   *
    * @param binaries
    * @return
    */
