@@ -1,4 +1,4 @@
-package com.github.timshadel.simplesecrets;
+package com.timshadel.simplesecrets;
 
 
 import org.junit.Test;

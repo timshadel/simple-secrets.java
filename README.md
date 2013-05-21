@@ -20,12 +20,11 @@ import com.timshadel.SimpleSecrets.Packet;
 
 // Try `head /dev/urandom | shasum -a 256` to make a decent 256-bit key
 Packet sender = new Packet('<64-char hex string master key (32 bytes, 256 bits)>');
-// => #<Packet@5e8fce95>
 
 Map<String, String> message = new HashMap<String, String>();
-message.put( "msg", "this is a secret message" );
+message.put( "msg", "This is a secret message!" );
 String websafe = sender.pack(message);
-// => "Qr4m7AughkcQIRqQvlyXiB67EwHdBf5n9JD2s_Z9NpO4ksPGvLYjNbDm3HRzvFXFSpV2IqDQw_LTamndMh2c7iOQT0lSp4LstqJPAtoQklU5sb7JHYyTOuf-6W-q7W8gAnq1wCs5"
+// => "sJfaVoPxR7OSxiTNOG7_DeOQ7hzCooPdTpaR0c0MJTJZW24ule-g7JJqI5-KXt4GbAIY0jOel8HuZooWhMjW_lElOjvTjJ51T6C6r2lOPCHT5La2hEl-x9Zm9WyeIUw05XRhulDn"
 ```
 
 Receive:
@@ -33,16 +32,14 @@ Receive:
 ```java
 import com.timshadel.SimpleSecrets.Packet;
 
-// Same shared key
+// Using the same shared key
 Packet sender = new Packet('<shared-key-hex>');
-// => #<Packet@ce955e8f>
-// Read data from somewhere
-String websafe = "OqlG6KVMeyFYmunboS3HIXkvN_nXKTxg2yNkQydZOhvJrZvmfov54hUmkkiZCnlhzyrlwOJkbV7XnPPbqvdzZ6TsFOO5YdmxjxRksZmeIhbhLaMiDbfsOuSY1dBn_ZgtYCw-FRIM";
 
-Object secret_message = sender.unpack(websafe);
-// => {
-//      msg: "this is a secret message"
-//    }
+// Read data from somewhere (i.e. Request headers, request param, etc.)
+String websafe = "sJfaVoPxR7OSxiTNOG7_DeOQ7hzCooPdTpaR0c0MJTJZW24ule-g7JJqI5-KXt4GbAIY0jOel8HuZooWhMjW_lElOjvTjJ51T6C6r2lOPCHT5La2hEl-x9Zm9WyeIUw05XRhulDn";
+
+Map<String, String> message = sender.unpack(websafe, Map<String, String>.class);
+message.get("msg")  // => "This is a secret message!"
 ```
 
 
