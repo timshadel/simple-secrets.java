@@ -260,7 +260,7 @@ public class PacketTest
 
 
   @Test
-  public void test_pack_and_unpack()
+  public void test_pack_and_unpack_class()
           throws GeneralSecurityException, IOException
   {
     String data = "This is a secret message!";
@@ -268,6 +268,18 @@ public class PacketTest
     String packed_data = new Packet(MASTER_KEY).pack(data);
 
     String decrypted = new Packet(MASTER_KEY).unpack(packed_data, String.class);
+    assertEquals(data, decrypted);
+  }
+
+  @Test
+  public void test_pack_and_unpack_template()
+          throws GeneralSecurityException, IOException
+  {
+    String data = "This is a secret message!";
+
+    String packed_data = new Packet(MASTER_KEY).pack(data);
+
+    String decrypted = new Packet(MASTER_KEY).unpack(packed_data, TString);
     assertEquals(data, decrypted);
   }
 
@@ -289,6 +301,22 @@ public class PacketTest
     PowerMockito.spy(Primitives.class);
     Mockito.when(Primitives.serialize(Mockito.any())).thenThrow(new IOException());
     new Packet(MASTER_KEY).pack("abcd");
+  }
+
+  // Coverage test
+  @Test(expected = IllegalArgumentException.class)
+  public void test_unpack_class_finally_block()
+          throws GeneralSecurityException, IOException
+  {
+    new Packet(MASTER_KEY).unpack(null, String.class);
+  }
+
+  // Coverage test
+  @Test(expected = IllegalArgumentException.class)
+  public void test_unpack_template_finally_block()
+          throws GeneralSecurityException, IOException
+  {
+    new Packet(MASTER_KEY).unpack(null, TString);
   }
 
 

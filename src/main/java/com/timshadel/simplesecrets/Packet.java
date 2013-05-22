@@ -59,24 +59,33 @@ public class Packet
   public <T> T unpack(String packed_data, Class<T> klass)
           throws GeneralSecurityException, IOException
   {
-    byte[] packet = null;
-    byte[] cipher_data = null;
     byte[] body = null;
     try
     {
-      packet = Primitives.binify(packed_data);
-      cipher_data = verify(packet, master_key, identity);
-
-      body = decrypt_body(cipher_data, master_key);
-
+      body = body_for_unpack(packed_data);
       return body_to_data(body, klass);
     }
     finally
     {
-      Primitives.zero(packet, body, cipher_data);
+      Primitives.zero(body);
     }
   }
 
+
+  public <T> T unpack(String packed_data, Template<T> template)
+          throws GeneralSecurityException, IOException
+  {
+    byte[] body = null;
+    try
+    {
+      body = body_for_unpack(packed_data);
+      return body_to_data(body, template);
+    }
+    finally
+    {
+      Primitives.zero(body);
+    }
+  }
 
   public static byte[] build_body(Object data)
           throws IOException
@@ -216,6 +225,26 @@ public class Packet
 
     Primitives.zero(hmac_key, mac);
     return Arrays.copyOfRange(packet, 6, packet.length - 32);
+  }
+
+
+
+  private byte[] body_for_unpack(String packed_data)
+          throws GeneralSecurityException, IOException
+  {
+    byte[] packet = null;
+    byte[] cipher_data = null;
+    try
+    {
+      packet = Primitives.binify(packed_data);
+      cipher_data = verify(packet, master_key, identity);
+
+      return decrypt_body(cipher_data, master_key);
+    }
+    finally
+    {
+      Primitives.zero(packet, cipher_data);
+    }
   }
 
 
