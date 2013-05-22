@@ -3,6 +3,7 @@ package com.timshadel.simplesecrets;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.msgpack.template.Template;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -99,23 +100,33 @@ public class Packet
   public static <T> T body_to_data(final byte[] body, final Class<T> klass)
           throws GeneralSecurityException, IOException
   {
-    // Must at least have a nonce
-    if(body.length < 16)
-      throw new GeneralSecurityException("Invalid serialized payload.");
-
-    byte[] nonce = null;
     byte[] payload = null;
     try
     {
-      nonce = Arrays.copyOfRange(body, 0, 16);
-      payload = Arrays.copyOfRange(body, 16, body.length);
-
+      payload = payload_for_body_to_data(body);
       return Primitives.deserialize(payload, klass);
     }
     finally
     {
-      Primitives.zero(nonce, payload);
+      Primitives.zero(payload);
     }
+  }
+
+
+  public static <T> T body_to_data(final byte[] body, final Template<T> template)
+          throws GeneralSecurityException, IOException
+  {
+    byte[] payload = null;
+    try
+    {
+      payload = payload_for_body_to_data(body);
+      return Primitives.deserialize(payload, template);
+    }
+    finally
+    {
+      Primitives.zero(payload);
+    }
+
   }
 
 
@@ -205,5 +216,18 @@ public class Packet
 
     Primitives.zero(hmac_key, mac);
     return Arrays.copyOfRange(packet, 6, packet.length - 32);
+  }
+
+
+  private static byte[] payload_for_body_to_data(final byte[] body)
+          throws GeneralSecurityException
+  {
+    // Must at least have a nonce
+    if(body.length < 16)
+      throw new GeneralSecurityException("Invalid serialized payload.");
+
+    // First 16 bytes are the nonce, which we don't need right now.
+    // Just return the remainder as the payload
+    return Arrays.copyOfRange(body, 16, body.length);
   }
 }

@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
+import org.msgpack.template.Template;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -17,6 +18,7 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 
 import static org.junit.Assert.*;
+import static org.msgpack.template.Templates.TString;
 
 
 @RunWith(PowerMockRunner.class)
@@ -88,7 +90,7 @@ public class PacketTest
   }
 
   @Test
-  public void test_body_to_data()
+  public void test_body_to_data_class()
           throws GeneralSecurityException, IOException
   {
     byte[] nonce = Primitives.nonce();
@@ -99,8 +101,21 @@ public class PacketTest
     assertEquals("abcd", Packet.body_to_data(body, String.class));
   }
 
+  @Test
+  public void test_body_to_data_template()
+          throws GeneralSecurityException, IOException
+  {
+    byte[] nonce = Primitives.nonce();
+    byte[] data = new byte[]{ -92, 97, 98, 99, 100 };
+
+    byte[] body = Utilities.joinByteArrays(nonce, data);
+
+    assertEquals("abcd", Packet.body_to_data(body, TString));
+  }
+
+
   @Test(expected = IOException.class)
-  public void test_body_to_data_finally_block()
+  public void test_body_to_data_class_finally_block()
           throws GeneralSecurityException, IOException
   {
     PowerMockito.mockStatic(Primitives.class);
@@ -111,6 +126,21 @@ public class PacketTest
 
     byte[] body = Utilities.joinByteArrays(nonce, data);
     Packet.body_to_data(body, String.class);
+  }
+
+
+  @Test(expected = IOException.class)
+  public void test_body_to_data_template_finally_block()
+          throws GeneralSecurityException, IOException
+  {
+    PowerMockito.mockStatic(Primitives.class);
+    Mockito.when(Primitives.deserialize(Mockito.any(byte[].class), Mockito.any(Template.class))).thenThrow(new IOException());
+
+    byte[] nonce = new byte[16];
+    byte[] data = new byte[]{ -92, 97, 98, 99, 100 };
+
+    byte[] body = Utilities.joinByteArrays(nonce, data);
+    Packet.body_to_data(body, TString);
   }
 
 

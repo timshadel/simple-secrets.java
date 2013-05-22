@@ -9,14 +9,13 @@ import org.junit.runner.RunWith;
 import org.msgpack.template.Template;
 import org.msgpack.type.Value;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.msgpack.MessagePack;
-import static org.msgpack.template.Templates.*;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.msgpack.template.Templates.*;
 
 
 @RunWith(PowerMockRunner.class)
