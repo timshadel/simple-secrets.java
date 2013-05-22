@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.timshadel</groupId>
+    <groupId>com.timshadel</groupId>
     <artifactId>simple-secrets</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>

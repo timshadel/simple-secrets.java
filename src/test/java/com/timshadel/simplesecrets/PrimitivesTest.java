@@ -6,11 +6,15 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.msgpack.template.Template;
+import org.msgpack.type.Value;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.msgpack.MessagePack;
+import static org.msgpack.template.Templates.*;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -458,17 +462,48 @@ public class PrimitivesTest
           throws IOException
   {
     byte[] binary = new byte[]{ -92, 97, 98, 99, 100 };
-    Primitives.deserialize(binary, null);
+    Primitives.deserialize(binary, (Class)null);
+  }
+
+  @Test( expected = IllegalArgumentException.class)
+  public void test_deserialize_null_template()
+          throws IOException
+  {
+    byte[] binary = new byte[]{ -92, 97, 98, 99, 100 };
+    Primitives.deserialize(binary, (Template)null);
   }
 
   @Test
-  public void test_deserialize()
+  public void test_deserialize_with_class()
           throws IOException
   {
     byte[] binary = new byte[]{ -92, 97, 98, 99, 100 };
     Object object = Primitives.deserialize(binary, String.class);
     assertTrue(object instanceof String);
     assertEquals("abcd", object);
+  }
+
+  @Test
+  public void test_deserialize_with_template()
+          throws IOException
+  {
+    Map<String, Object> data = new HashMap<String, Object>();
+    data.put("id", 12345);
+    data.put("name", "John Doe");
+    List<String> roles = new ArrayList<String>();
+    roles.add("admin");
+    roles.add("user");
+    data.put("roles", roles);
+
+    byte[] binary = Primitives.serialize(data);
+
+    Map<String, Value> map = Primitives.deserialize(binary, tMap(TString, TValue));
+    assertEquals(12345, map.get("id").asIntegerValue().getInt());
+    assertEquals("John Doe", map.get("name").asRawValue().getString());
+    List<Value> list = (List<Value>)map.get("roles");
+    assertEquals(2, list.size());
+    assertEquals("admin", list.get(0).asRawValue().getString());
+    assertEquals("user", list.get(1).asRawValue().getString());
   }
 
 

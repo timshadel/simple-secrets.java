@@ -4,6 +4,9 @@ package com.timshadel.simplesecrets;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.msgpack.MessagePack;
+import org.msgpack.template.Template;
+
+import static org.msgpack.template.Templates.*;
 
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
@@ -296,12 +299,23 @@ public class Primitives
 
 
   /**
-   * Turn a binary representation into a Ruby object suitable for use in application logic.
+   * Turn a binary representation into an object suitable for use in application logic.
    * This object possibly originated in a different programming environment—it should be
    * JSON-like in structure.
    *
    * Uses MsgPack data serialization.
    *
+   * The Class parameter is the class that MessagePack will try to return after
+   * converting the binary data.  In most cases, simple classes or classes
+   * annotated with @Message convert easily.  Collections and more complex
+   * classes may need their own MessagePack converter class or need to use
+   * the Template<T> version of this method.
+   *
+   * @link deserialize(final byte[] binary, final Template<T> template)
+   *
+   * See the MessagePack website for more information:
+   *
+   * @link http://msgpack.org/
    *
    * @param binary - a binary string version of the object
    * @param klass - the class of the object to be returned
@@ -317,6 +331,37 @@ public class Primitives
       throw new IllegalArgumentException("Class type required for deserialization.");
 
     return new MessagePack().read(binary, klass);
+  }
+
+
+  /**
+   * Turn a binary representation into an object suitable for use in application logic.
+   * This object possibly originated in a different programming environment—it should be
+   * JSON-like in structure.
+   *
+   * Uses MsgPack data serialization.
+   *
+   * The Template parameter is a MessagePack template, such as "tMap<TString, TValue>"
+   * for a Map object with String keys.  The Value objects have methods to determine
+   * their type and to return typed values.  See the MessagePack website for more
+   * information:
+   *
+   * @link http://msgpack.org/
+   *
+   * @param binary - a binary string version of the object
+   * @param template - the template of the object to be returned
+   * @param <T>
+   * @return - an object of the given class type
+   * @throws IOException
+   */
+  public static <T> T deserialize(final byte[] binary, final Template<T> template)
+          throws IOException
+  {
+    Utilities.assertBinary(binary);
+    if(template == null)
+      throw new IllegalArgumentException("Template type required for deserialization.");
+
+    return new MessagePack().read(binary, template);
   }
 
 
