@@ -16,7 +16,7 @@ public class Packet
   private final byte[] identity;
 
 
-  public Packet(String master_key)
+  public Packet(final String master_key)
           throws GeneralSecurityException
   {
     if (master_key == null)
@@ -35,7 +35,7 @@ public class Packet
   }
 
 
-  public String pack(Object data)
+  public String pack(final Object data)
           throws GeneralSecurityException, IOException
   {
     byte[] body = null;
@@ -56,7 +56,7 @@ public class Packet
   }
 
 
-  public <T> T unpack(String packed_data, Class<T> klass)
+  public <T> T unpack(final String packed_data, final Class<T> klass)
           throws GeneralSecurityException, IOException
   {
     byte[] body = null;
@@ -72,7 +72,7 @@ public class Packet
   }
 
 
-  public <T> T unpack(String packed_data, Template<T> template)
+  public <T> T unpack(final String packed_data, final Template<T> template)
           throws GeneralSecurityException, IOException
   {
     byte[] body = null;
@@ -87,7 +87,7 @@ public class Packet
     }
   }
 
-  public static byte[] build_body(Object data)
+  public static byte[] build_body(final Object data)
           throws IOException
   {
     byte[] nonce = null;
@@ -229,7 +229,7 @@ public class Packet
 
 
 
-  private byte[] body_for_unpack(String packed_data)
+  private byte[] body_for_unpack(final String packed_data)
           throws GeneralSecurityException, IOException
   {
     byte[] packet = null;
