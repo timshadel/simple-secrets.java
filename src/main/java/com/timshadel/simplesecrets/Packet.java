@@ -22,6 +22,8 @@ public class Packet
     if (master_key == null)
       throw new IllegalArgumentException("Master key is required.");
 
+    Utilities.assertBinarySize(master_key.getBytes(), 32);
+
     try
     {
       this.master_key = Hex.decodeHex(master_key.toCharArray());

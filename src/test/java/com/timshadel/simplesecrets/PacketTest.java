@@ -39,6 +39,14 @@ public class PacketTest
 
 
   @Test(expected = IllegalArgumentException.class)
+  public void test_constructor_empty_key()
+          throws GeneralSecurityException
+  {
+    new Packet("");
+  }
+
+
+  @Test(expected = IllegalArgumentException.class)
   public void test_constructor_bad_key()
           throws GeneralSecurityException
   {
