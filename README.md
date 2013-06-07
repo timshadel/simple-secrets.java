@@ -1,4 +1,3 @@
-
 # simple-secrets.java [![Build Status](https://travis-ci.org/timshadel/simple-secrets.java.png?branch=master)](https://travis-ci.org/timshadel/simple-secrets.java)
 
 The Java implementation of a simple, opinionated library for encrypting small packets of data securely. Designed for exchanging tokens among systems written in a variety of programming languages: [Node.js][simple-secrets], [Ruby][simple-secrets.rb], [Objective-C][SimpleSecrets], [Java][simple-secrets.java], [Erlang][simple_secrets.erl].
@@ -8,6 +7,21 @@ The Java implementation of a simple, opinionated library for encrypting small pa
 [SimpleSecrets]: https://github.com/timshadel/SimpleSecrets
 [simple-secrets.java]: https://github.com/timshadel/simple-secrets.java
 [simple_secrets.erl]: https://github.com/CamShaft/simple_secrets.erl
+
+## Maven
+
+To include the library in a Maven project, use this definition:
+
+```xml
+<dependency>
+  <groupId>com.timshadel</groupId>
+  <artifactId>simple-secrets</artifactId>
+  <version>1.0.3</version>
+</dependency>
+```
+
+The library is hosted in Sonatype's OSS repository and the Maven Central repository.
+
 
 ## Examples
 
