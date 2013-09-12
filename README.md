@@ -30,10 +30,10 @@ The library is hosted in Sonatype's OSS repository and the Maven Central reposit
 Send:
 
 ```java
-import com.timshadel.SimpleSecrets.Packet;
+import com.timshadel.simplesecrets.Packet;
 
 // Try `head /dev/urandom | shasum -a 256` to make a decent 256-bit key
-Packet sender = new Packet("<64-char hex string master key (32 bytes, 256 bits)>");
+Packet packet = new Packet("<64-char hex string master key (32 bytes, 256 bits)>");
 
 Map<String, String> message = new HashMap<String, String>();
 message.put( "msg", "This is a secret message!" );
@@ -44,10 +44,10 @@ String websafe = sender.pack(message);
 Receive:
 
 ```java
-import com.timshadel.SimpleSecrets.Packet;
+import com.timshadel.simplesecrets.Packet;
 
 // Using the same shared key
-Packet sender = new Packet("<shared-key-hex>");
+Packet packet = new Packet("<shared-key-hex>");
 
 // Read data from somewhere (i.e. Request headers, request param, etc.)
 String websafe = "sJfaVoPxR7OSxiTNOG7_DeOQ7hzCooPdTpaR0c0MJTJZW24ule-g7JJqI5-KXt4GbAIY0jOel8HuZooWhMjW_lElOjvTjJ51T6C6r2lOPCHT5La2hEl-x9Zm9WyeIUw05XRhulDn";
