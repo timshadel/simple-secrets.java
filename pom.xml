@@ -26,7 +26,7 @@
 
         <property.version.commons-lang3>3.1</property.version.commons-lang3>
         <property.version.commons-codec>1.8</property.version.commons-codec>
-        <property.version.msgpack>0.6.7</property.version.msgpack>
+        <property.version.msgpack>0.6.11</property.version.msgpack>
 
         <property.version.junit>4.11</property.version.junit>
         <property.version.mockito>1.9.5</property.version.mockito>

@@ -28,7 +28,7 @@ public class Packet
     }
     catch (DecoderException e)
     {
-      throw new IllegalArgumentException("Invalid hexidecimal key.", e);
+      throw new IllegalArgumentException("Invalid hexadecimal key.", e);
     }
     Utilities.assertBinarySize(this.master_key, 32);
 
@@ -210,7 +210,7 @@ public class Packet
       throw new GeneralSecurityException("Missing packet identity.");
 
     byte[] packet_id = Arrays.copyOfRange(packet, 0, 6);
-    if(Primitives.compare(packet_id, identity) == false)
+    if(!Primitives.compare(packet_id, identity))
       throw new GeneralSecurityException("Invalid packet identity.");
 
     if(packet.length < 6 + 32)
@@ -221,7 +221,7 @@ public class Packet
 
     byte[] hmac_key = Primitives.derive_sender_hmac(master_key);
     byte[] mac = Primitives.mac(data, hmac_key);
-    if(Primitives.compare(packet_mac, mac) == false)
+    if(!Primitives.compare(packet_mac, mac))
       throw new GeneralSecurityException("Invalid packet MAC.");
 
     Primitives.zero(hmac_key, mac);
