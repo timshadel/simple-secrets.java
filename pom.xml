@@ -31,6 +31,7 @@
         <property.version.junit>4.11</property.version.junit>
         <property.version.mockito>1.9.5</property.version.mockito>
         <property.version.powermock>1.5</property.version.powermock>
+        <property.version.jacoco>0.7.5.201505241946</property.version.jacoco>
     </properties>
 
     <dependencies>
@@ -91,7 +92,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.6.2.201302030002</version>
+                <version>${property.version.jacoco}</version>
                 <configuration>
                     <check>
                         <classRatio>100</classRatio>
