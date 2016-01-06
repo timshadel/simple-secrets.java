@@ -16,7 +16,7 @@ To include the library in a Maven project, use this definition:
 <dependency>
   <groupId>com.timshadel</groupId>
   <artifactId>simple-secrets</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
 </dependency>
 ```
 
@@ -61,6 +61,6 @@ message.get("msg")  // => "This is a secret message!"
 
 This implementation follows [simple-secrets] for 100% compatibility.
 
-## License 
+## License
 
 MIT.
