@@ -56,10 +56,13 @@ public class CompatabilityTest
   public void test_string()
           throws GeneralSecurityException, IOException
   {
-    String data = "This is the simple-secrets compatibility standard string.";
-    String packed_data = new Packet(MASTER_KEY).pack(data);
+    String string = "This is the simple-secrets compatibility standard string.";
     String msgpack1 = "W7l1PJaffzMzIzzpI1hg75AubQ_PNSjEUycoH1Z7GEwonPVW7yMqhBNKylbt-R7lByBe6fmIZdLIH2C2BPyYOtA-z2oGxclL_nZ0Ylo8e_gkf3bXzMn04l61i4dRsVCMJ5pL72suwuJMURy81n73eZEu2ASoVqSSVsnJo9WODLLmvsF_Mu0";
-    assertEquals(msgpack1, packed_data);
+    String msgpack5 = "W7l1PJaffzMzIzzpI1hg75AubQ_PNSjEUycoH1Z7GEwonPVW7yNp54eHe8KRY2JqOo9H8bi3Hnm4G0-r5SNlXXhIW9S99qTxTwibKW7mLkaNMTeZ1ktDwx-4sjCpCnXPIyZe7-l6-o6XjIqazRdhGD6AH5ZS9UFqLpaqIowSUQ9CeiQeFBQ";
+
+    assertEquals(msgpack1, new Packet(MASTER_KEY).pack(string));
+    assertEquals(string, new Packet(MASTER_KEY).unpack(msgpack1, String.class));
+    assertEquals(string, new Packet(MASTER_KEY).unpack(msgpack5, String.class));
   }
 
 
