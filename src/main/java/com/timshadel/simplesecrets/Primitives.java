@@ -123,7 +123,10 @@ public class Primitives
 
     Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
     SecretKeySpec keySpec = new SecretKeySpec(master_key, KEY_ALGORITHM);
-    cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+    byte[] iv = new byte[16];
+    new SecureRandom().nextBytes(iv);
+    IvParameterSpec ivSpec = new IvParameterSpec(iv, 0, cipher.getBlockSize());
+    cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
 
     byte[] iv_bytes = cipher.getIV();
     byte[] binary_bytes = cipher.update(binary);
